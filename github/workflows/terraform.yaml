@@ -1,0 +1,149 @@
+name: terraform-worfklow
+
+on:
+  push:
+    branches:
+    - main
+    - staging
+    - develop
+    paths:
+    - '**'
+    - '!.github/params/**'
+    - '!.github/scripts/**'
+    - '!.github/workflows/**'
+
+jobs:
+  init:
+    name: Initialization
+    runs-on: ubuntu-latest
+    outputs:
+      threads: ${{ steps.param.outputs.threads }}
+
+      dir_list_dev: ${{ steps.param.outputs.dir_list_dev }}
+      dir_list_test: ${{ steps.param.outputs.dir_list_test }}
+      dir_list_prod: ${{ steps.param.outputs.dir_list_prod }}
+
+      execute_check_and_format: ${{ steps.param.outputs.execute_check_and_format }}
+      execute_test: ${{ steps.param.outputs.execute_test }}
+      execute_deploy: ${{ steps.param.outputs.execute_deploy }}
+
+      sha7: ${{ steps.param.outputs.sha7 }}
+      tmp_git_branch: ${{ steps.param.outputs.tmp_git_branch }}
+    steps:
+      - name: Define settings
+        id: define
+        env:
+          GITHUB_REF: ${{ github.ref }} 
+          GITHUB_SHA: ${{ github.sha }}
+        run:
+            .github/scripts/common_init_define.sh
+      - name: Show output values
+        id: show
+        run: |
+            .github/scripts/common_init_print.sh
+
+  dev-check:
+    name: Check directories
+    needs: [init]
+    runs-on: ubuntu-latest
+    if: needs.init.outputs.execute_check_and_format == '1'
+    environment: development
+    strategy:
+      max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
+      matrix:
+        content: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
+    steps:
+      - name: Terraform check code
+        id: check
+        env:
+          WORKING_DIR: ${{ matrix.directory }}
+        run: |
+            .github/scripts/terraform_check.sh "$WORKING_DIR"
+
+  dev-fmt:
+    name: Format directories
+    needs: [init, dev-check]
+    runs-on: ubuntu-latest
+    if: needs.init.outputs.execute_check_and_format == '1'
+    environment: development
+    strategy:
+      max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
+      matrix:
+        content: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: sources/${{ matrix.directory }}
+    steps:
+      - name: Terraform format code
+        id: format
+        env:
+          WORKING_DIR: ${{ matrix.directory }}
+          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
+        run: |
+            .github/scripts/terraform_fmt.sh "$WORKING_DIR" "$BRANCH_NAME"
+
+  dev-pull-diff:
+    name: Format directories
+    needs: [init, dev-fmt]
+    runs-on: ubuntu-latest
+    if: needs.init.outputs.execute_check == '1'
+    environment: development
+    steps:
+      - name: Terraform format code
+        id: pull
+        env:
+          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
+        run: |
+            .github/scripts/common_pull_diff.sh "$BRANCH_NAME"
+
+  test-stagging:
+    name: Test on stagging
+    needs: [init, dev-pull-diff]
+    runs-on: ubuntu-latest
+    if: needs.init.outputs.execute_test == '1'
+    environment: testing
+    strategy:
+      max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
+      matrix:
+        content: ${{ fromJson(needs.init.outputs.dir_list_test) }}
+    steps:
+      - name: Deploy on test
+        id: deploy
+        env:
+          IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
+          IDENTITY_FEDERATION_POOL: ${{ secret    - name: Start SSH agent
+      id: ssh
+      if: env.SSH_PRIVATE_KEY
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}s.identity_federation_pool }}
+          IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
+          SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
+        run: |
+            .github/scripts/common_check_secrets.sh
+            .github/scripts/terraform_deploy.sh "$SUFFIX_NAME"
+
+  deploy-production:
+    name: Deploy on production
+    needs: [init, test-stagging]
+    runs-on: ubuntu-latest
+    if: needs.init.outputs.execute_deploy == '1'
+    environment: production
+    strategy:
+      max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
+      matrix:
+        content: ${{ fromJson(needs.init.outputs.dir_list_prod) }}
+    steps:
+      - name: Deploy on production
+        id: deploy
+        env:
+          IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
+          IDENTITY_FEDERATION_POOL: ${{ secrets.identity_federation_pool }}
+          IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
+        run: |
+            .github/scripts/common_check_secrets.sh
+            .github/scripts/terraform_deploy.sh
+
