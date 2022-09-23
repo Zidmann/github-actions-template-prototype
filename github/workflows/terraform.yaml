@@ -37,7 +37,7 @@ jobs:
           GITHUB_REF: ${{ github.ref }} 
           GITHUB_SHA: ${{ github.sha }}
         run:
-            .github/scripts/common_init_define.sh
+            .github/scripts/common_init_define.sh "terraform"
       - name: Show output values
         id: show
         run: |
@@ -130,7 +130,7 @@ jobs:
     name: Format directories
     needs: [init, dev-fmt]
     runs-on: ubuntu-latest
-    if: needs.init.outputs.execute_check == '1'
+    if: needs.init.outputs.execute_check_and_format == '1'
     environment: development
     steps:
       - name: Start SSH agent
