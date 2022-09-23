@@ -29,6 +29,7 @@ jobs:
 
       sha7: ${{ steps.param.outputs.sha7 }}
       tmp_git_branch: ${{ steps.param.outputs.tmp_git_branch }}
+      cache_key: ${{ steps.param.outputs.cache_key }}
     steps:
       - name: Define settings
         id: define
@@ -41,6 +42,18 @@ jobs:
         id: show
         run: |
             .github/scripts/common_init_print.sh
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v2
+        with:
+          path: sources/
+          submodules: true
+      - name: Cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ steps.param.outputs.cache_key }}
 
   dev-check:
     name: Check directories
@@ -53,6 +66,14 @@ jobs:
       matrix:
         content: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
     steps:
+      - name: Cache
+        id: cache
+        env:
+          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ env.CACHE_KEY }}
       - name: Terraform check code
         id: check
         env:
@@ -75,6 +96,28 @@ jobs:
         shell: bash
         working-directory: sources/${{ matrix.directory }}
     steps:
+      - name: Start SSH agent
+        id: ssh
+        if: env.SSH_PRIVATE_KEY
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Setup Terraform
+        id: setup
+        uses: hashicorp/setup-terraform@v1
+      - name: Set up Cloud SDK
+        id: gcloud
+        uses: google-github-actions/setup-gcloud@v0
+      - name: Cache
+        id: cache
+        env:
+          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ env.CACHE_KEY }}
       - name: Terraform format code
         id: format
         env:
@@ -90,6 +133,22 @@ jobs:
     if: needs.init.outputs.execute_check == '1'
     environment: development
     steps:
+      - name: Start SSH agent
+        id: ssh
+        if: env.SSH_PRIVATE_KEY
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Cache
+        id: cache
+        env:
+          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ env.CACHE_KEY }}
       - name: Terraform format code
         id: pull
         env:
@@ -108,23 +167,51 @@ jobs:
       matrix:
         content: ${{ fromJson(needs.init.outputs.dir_list_test) }}
     steps:
+      - name: Start SSH agent
+        id: ssh
+        if: env.SSH_PRIVATE_KEY
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Setup Terraform
+        id: setup
+        uses: hashicorp/setup-terraform@v1
+      - name: Set up Cloud SDK
+        id: gcloud
+        uses: google-github-actions/setup-gcloud@v0
+      - name: Cache
+        id: cache
+        env:
+          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ env.CACHE_KEY }}
       - name: Deploy on test
         id: deploy
         env:
           IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
-          IDENTITY_FEDERATION_POOL: ${{ secret    - name: Start SSH agent
-      id: ssh
-      if: env.SSH_PRIVATE_KEY
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}s.identity_federation_pool }}
+          IDENTITY_FEDERATION_POOL: ${{ secrets.identity_federation_pool }}
           IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
+          GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         run: |
             .github/scripts/common_check_secrets.sh
             .github/scripts/terraform_deploy.sh "$SUFFIX_NAME"
+      - name: Clean environment
+        id: clean
+        env:
+          IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
+          IDENTITY_FEDERATION_POOL: ${{ secrets.identity_federation_pool }}
+          IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
+          GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
+          SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
+        continue-on-error: true
+        run: |
+            .github/scripts/common_check_secrets.sh
+            .github/scripts/terraform_clean.sh "$SUFFIX_NAME"
 
   deploy-production:
     name: Deploy on production
@@ -137,12 +224,35 @@ jobs:
       matrix:
         content: ${{ fromJson(needs.init.outputs.dir_list_prod) }}
     steps:
+      - name: Start SSH agent
+        id: ssh
+        if: env.SSH_PRIVATE_KEY
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Setup Terraform
+        id: setup
+        uses: hashicorp/setup-terraform@v1
+      - name: Set up Cloud SDK
+        id: gcloud
+        uses: google-github-actions/setup-gcloud@v0
+      - name: Cache
+        id: cache
+        env:
+          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ env.CACHE_KEY }}
       - name: Deploy on production
         id: deploy
         env:
           IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
           IDENTITY_FEDERATION_POOL: ${{ secrets.identity_federation_pool }}
           IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
+          GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
         run: |
             .github/scripts/common_check_secrets.sh
             .github/scripts/terraform_deploy.sh
