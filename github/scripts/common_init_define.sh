@@ -1,22 +1,29 @@
 #!/bin/bash
 
+echo "[i] Starting common_init_define.sh script"
 WORKFLOW_NAME=$1
-GITHUB_SHA7=${GITHUB_SHA:0:7}
-GITHUB_BRANCH=${GITHUB_REF##*/}
+echo WORKFLOW_NAME="$WORKFLOW_NAME"
 
 echo "-------------------------"
+echo "[i] Defining SHA based variables"
+GITHUB_SHA7=${GITHUB_SHA:0:7}
 echo GITHUB_SHA="$GITHUB_SHA"
 echo GITHUB_SHA7="$GITHUB_SHA7"
+
 echo "-------------------------"
+echo "[i] Defining branch based variables"
+GITHUB_BRANCH=${GITHUB_REF##*/}
 echo GITHUB_REF="$GITHUB_REF"
 echo GITHUB_BRANCH="$GITHUB_BRANCH"
-echo "-------------------------"
 
+echo "-------------------------"
+echo "[i] Exporting basics parameters"
 echo "::set-output name=sha7::$GITHUB_SHA7"
 echo "::set-output name=tmp_git_branch::tmp_${WORKFLOW_NAME}_${GITHUB_SHA7}"
 echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}-"
 
 echo "-------------------------"
+echo "[i] Defining the jobs to execute according the branch"
 if [ "$GITHUB_BRANCH" == "main" ]
 then
 	echo "::set-output name=execute_check_and_format::1"
@@ -38,11 +45,32 @@ else
 fi
 
 echo "-------------------------"
+echo "[i] Loading the parameters file"
 source ".github/params/$WORKFLOW_NAME.env"
+if [ "$THREADS" == "" ]
+then
+	THREADS="8"
+fi
+if [ "$DIRECTORY_LIST_DEV" == "" ]
+then
+	DIRECTORY_LIST_DEV="[\".\"]"
+fi
+if [ "$DIRECTORY_LIST_TEST" == "" ]
+then
+	DIRECTORY_LIST_TEST="[\".\"]"
+fi
+if [ "$DIRECTORY_LIST_PROD" == "" ]
+then
+	DIRECTORY_LIST_PROD="[\".\"]"
+fi
+
+echo "-------------------------"
+echo "[i] Exporting matrix parameters"
 echo "::set-output name=threads::$THREADS"
 echo "::set-output name=dir_list_dev::$DIRECTORY_LIST_DEV"
 echo "::set-output name=dir_list_test::$DIRECTORY_LIST_TEST"
 echo "::set-output name=dir_list_prod::$DIRECTORY_LIST_PROD"
-echo "-------------------------"
 
-exit0
+echo "-------------------------"
+echo "[i] Ending common_init_define.sh script"
+exit 0
