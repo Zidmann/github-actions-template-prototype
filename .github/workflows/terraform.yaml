@@ -56,8 +56,8 @@ jobs:
           echo -e "-------------------------\n"
           echo -e "[i] Defining branch based variables\n"
           GITHUB_BRANCH=${GITHUB_REF##*/}
-          echo -e GITHUB_REF="$GITHUB_REF\n"
-          echo -e GITHUB_BRANCH="$GITHUB_BRANCH\n"
+          echo -e "GITHUB_REF=$GITHUB_REF\n"
+          echo -e "GITHUB_BRANCH=$GITHUB_BRANCH\n"
 
           echo -e "-------------------------\n"
           echo -e "[i] Exporting basics parameters\n"
@@ -75,7 +75,7 @@ jobs:
           elif [ "$GITHUB_BRANCH" == "staging" ]
           then
               echo "::set-output name=execute_check_and_format::1"
-              echo "::set-output name=execute_test::1"
+              echo "::set-output name=execute_test::1"GITHUB_REF
               echo "::set-output name=execute_deploy::0"
           elif [ "$GITHUB_BRANCH" == "develop" ]
           then
