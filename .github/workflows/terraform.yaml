@@ -48,12 +48,6 @@ jobs:
         id: show
         run: |
             .github/scripts/common_init_print.sh
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v2
-        with:
-          path: sources/
-          submodules: true
       - name: Cache
         id: cache
         uses: actions/cache@v3
