@@ -31,12 +31,6 @@ jobs:
       tmp_git_branch: ${{ steps.define.outputs.tmp_git_branch }}
       cache_key: ${{ steps.define.outputs.cache_key }}
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v2
-        with:
-          path: sources/
-          submodules: true
       - name: Define settings
         id: define
         env:
@@ -44,29 +38,29 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
         run:
-          echo -e "[i] Defining the workflow\n"
+          echo "[i] Defining the workflow\n"
           echo WORKFLOW_NAME=$WORKFLOW_NAME
 
-          echo -e "-------------------------\n"
-          echo -e "[i] Defining SHA based variables\n"
+          echo "-------------------------\n"
+          echo "[i] Defining SHA based variables\n"
           GITHUB_SHA7=${GITHUB_SHA:0:7}
           echo GITHUB_SHA=$GITHUB_SHA
           echo GITHUB_SHA7=$GITHUB_SHA7
 
-          echo -e "-------------------------\n"
-          echo -e "[i] Defining branch based variables\n"
+          echo "-------------------------\n"
+          echo "[i] Defining branch based variables\n"
           GITHUB_BRANCH=${GITHUB_REF##*/}
-          echo -e "GITHUB_REF=$GITHUB_REF\n"
-          echo -e "GITHUB_BRANCH=$GITHUB_BRANCH\n"
+          echo "GITHUB_REF=$GITHUB_REF\n"
+          echo "GITHUB_BRANCH=$GITHUB_BRANCH\n"
 
-          echo -e "-------------------------\n"
-          echo -e "[i] Exporting basics parameters\n"
+          echo "-------------------------\n"
+          echo "[i] Exporting basics parameters\n"
           echo "::set-output name=sha7::$GITHUB_SHA7"
           echo "::set-output name=tmp_git_branch::tmp_${WORKFLOW_NAME}_${GITHUB_SHA7}"
           echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}-"
 
-          echo -e "-------------------------\n"
-          echo -e "[i] Defining the jobs to execute according the branch\n"
+          echo "-------------------------\n"
+          echo "[i] Defining the jobs to execute according the branch\n"
           if [ "$GITHUB_BRANCH" == "main" ]
           then
               echo "::set-output name=execute_check_and_format::1"
@@ -83,12 +77,12 @@ jobs:
               echo "::set-output name=execute_test::0"
               echo "::set-output name=execute_deploy::0"
           else
-              echo -e "[-] Error unaccepted branch name\n"
+              echo "[-] Error unaccepted branch name\n"
               exit 1
           fi
 
-          echo -e "-------------------------\n"
-          echo -e "[i] Loading the parameters file\n"
+          echo "-------------------------\n"
+          echo "[i] Loading the parameters file\n"
           source ".github/params/$WORKFLOW_NAME.env"
           if [ "$THREADS" == "" ]
           then
@@ -107,8 +101,8 @@ jobs:
               DIRECTORY_LIST_PROD="[\".\"]"
           fi
 
-          echo -e "-------------------------\n"
-          echo -e "[i] Exporting matrix parameters\n"
+          echo "-------------------------\n"
+          echo "[i] Exporting matrix parameters\n"
           echo "::set-output name=threads::$THREADS"
           echo "::set-output name=dir_list_dev::$DIRECTORY_LIST_DEV"
           echo "::set-output name=dir_list_test::$DIRECTORY_LIST_TEST"
