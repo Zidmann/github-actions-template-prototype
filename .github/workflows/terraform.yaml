@@ -37,7 +37,7 @@ jobs:
           GITHUB_REF: ${{ github.ref }} 
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
-        run:
+        run: |
           echo "[i] Defining the workflow"
           echo WORKFLOW_NAME=$WORKFLOW_NAME
 
