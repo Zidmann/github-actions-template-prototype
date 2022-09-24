@@ -89,7 +89,7 @@ jobs:
 
           echo "-------------------------"
           echo "[i] Loading the parameters file"
-          source ".github/params/$WORKFLOW_NAME.env"
+          source "sources/.github/params/$WORKFLOW_NAME.env"
           if [ "$THREADS" == "" ]
           then
               THREADS="8"
