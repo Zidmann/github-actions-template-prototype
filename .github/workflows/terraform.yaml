@@ -45,13 +45,13 @@ jobs:
           WORKFLOW_NAME: "terraform"
         run:
           echo -e "[i] Defining the workflow\n"
-          echo -e WORKFLOW_NAME="$WORKFLOW_NAME\n"
+          echo -e "WORKFLOW_NAME=$WORKFLOW_NAME\n"
 
           echo -e "-------------------------\n"
           echo -e "[i] Defining SHA based variables\n"
           GITHUB_SHA7=${GITHUB_SHA:0:7}
-          echo -e GITHUB_SHA="$GITHUB_SHA\n"
-          echo -e GITHUB_SHA7="$GITHUB_SHA7\n"
+          echo -e "GITHUB_SHA=$GITHUB_SHA\n"
+          echo -e "GITHUB_SHA7=$GITHUB_SHA7\n"
 
           echo -e "-------------------------\n"
           echo -e "[i] Defining branch based variables\n"
