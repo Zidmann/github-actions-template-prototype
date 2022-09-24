@@ -67,4 +67,3 @@ echo "::set-output name=threads::$THREADS"
 echo "::set-output name=dir_list_dev::$DIRECTORY_LIST_DEV"
 echo "::set-output name=dir_list_test::$DIRECTORY_LIST_TEST"
 echo "::set-output name=dir_list_prod::$DIRECTORY_LIST_PROD"
-
