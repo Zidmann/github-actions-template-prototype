@@ -44,6 +44,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
         run: |
+          sources/.github/scripts/common_init_define.sh
           echo "[i] Defining the workflow"
           echo WORKFLOW_NAME=$WORKFLOW_NAME
 
@@ -63,7 +64,7 @@ jobs:
           echo "[i] Exporting basics parameters"
           echo "::set-output name=sha7::$GITHUB_SHA7"
           echo "::set-output name=tmp_git_branch::tmp_${WORKFLOW_NAME}_${GITHUB_SHA7}"
-          echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}-"
+          echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}"
 
           echo "-------------------------"
           echo "[i] Defining the jobs to execute according the branch"
