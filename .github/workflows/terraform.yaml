@@ -43,11 +43,11 @@ jobs:
           GITHUB_REF: ${{ github.ref }} 
           GITHUB_SHA: ${{ github.sha }}
         run:
-            .github/scripts/common_init_define.sh "terraform"
+            sources/.github/scripts/common_init_define.sh "terraform"
       - name: Show output values
         id: show
         run: |
-            .github/scripts/common_init_print.sh
+            sources/.github/scripts/common_init_print.sh
       - name: Cache
         id: cache
         uses: actions/cache@v3
@@ -79,7 +79,7 @@ jobs:
         env:
           WORKING_DIR: ${{ matrix.directory }}
         run: |
-            .github/scripts/terraform_check.sh "$WORKING_DIR"
+            sources/.github/scripts/terraform_check.sh "$WORKING_DIR"
 
   dev-fmt:
     name: Format directories
@@ -124,7 +124,7 @@ jobs:
           WORKING_DIR: ${{ matrix.directory }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
         run: |
-            .github/scripts/terraform_fmt.sh "$WORKING_DIR" "$BRANCH_NAME"
+            sources/.github/scripts/terraform_fmt.sh "$WORKING_DIR" "$BRANCH_NAME"
 
   dev-pull-diff:
     name: Format directories
@@ -154,7 +154,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
         run: |
-            .github/scripts/common_pull_diff.sh "$BRANCH_NAME"
+            sources/.github/scripts/common_pull_diff.sh "$BRANCH_NAME"
 
   test-stagging:
     name: Test on stagging
@@ -198,8 +198,8 @@ jobs:
           GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         run: |
-            .github/scripts/common_check_secrets.sh
-            .github/scripts/terraform_deploy.sh "$SUFFIX_NAME"
+            sources/.github/scripts/common_check_secrets.sh
+            sources/.github/scripts/terraform_deploy.sh "$SUFFIX_NAME"
       - name: Clean environment
         id: clean
         env:
@@ -210,8 +210,8 @@ jobs:
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         continue-on-error: true
         run: |
-            .github/scripts/common_check_secrets.sh
-            .github/scripts/terraform_clean.sh "$SUFFIX_NAME"
+            sources/.github/scripts/common_check_secrets.sh
+            sources/.github/scripts/terraform_clean.sh "$SUFFIX_NAME"
 
   deploy-production:
     name: Deploy on production
@@ -254,6 +254,6 @@ jobs:
           IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
           GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
         run: |
-            .github/scripts/common_check_secrets.sh
-            .github/scripts/terraform_deploy.sh
+            sources/.github/scripts/common_check_secrets.sh
+            sources/.github/scripts/terraform_deploy.sh
 
