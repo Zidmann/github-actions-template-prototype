@@ -38,29 +38,29 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
         run:
-          echo "[i] Defining the workflow\n"
+          echo "[i] Defining the workflow"
           echo WORKFLOW_NAME=$WORKFLOW_NAME
 
-          echo "-------------------------\n"
-          echo "[i] Defining SHA based variables\n"
+          echo "-------------------------"
+          echo "[i] Defining SHA based variables"
           GITHUB_SHA7=${GITHUB_SHA:0:7}
           echo GITHUB_SHA=$GITHUB_SHA
           echo GITHUB_SHA7=$GITHUB_SHA7
 
-          echo "-------------------------\n"
-          echo "[i] Defining branch based variables\n"
+          echo "-------------------------"
+          echo "[i] Defining branch based variables"
           GITHUB_BRANCH=${GITHUB_REF##*/}
-          echo "GITHUB_REF=$GITHUB_REF\n"
-          echo "GITHUB_BRANCH=$GITHUB_BRANCH\n"
+          echo "GITHUB_REF=$GITHUB_REF"
+          echo "GITHUB_BRANCH=$GITHUB_BRANCH"
 
-          echo "-------------------------\n"
-          echo "[i] Exporting basics parameters\n"
+          echo "-------------------------"
+          echo "[i] Exporting basics parameters"
           echo "::set-output name=sha7::$GITHUB_SHA7"
           echo "::set-output name=tmp_git_branch::tmp_${WORKFLOW_NAME}_${GITHUB_SHA7}"
           echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}-"
 
-          echo "-------------------------\n"
-          echo "[i] Defining the jobs to execute according the branch\n"
+          echo "-------------------------"
+          echo "[i] Defining the jobs to execute according the branch"
           if [ "$GITHUB_BRANCH" == "main" ]
           then
               echo "::set-output name=execute_check_and_format::1"
@@ -77,12 +77,12 @@ jobs:
               echo "::set-output name=execute_test::0"
               echo "::set-output name=execute_deploy::0"
           else
-              echo "[-] Error unaccepted branch name\n"
+              echo "[-] Error unaccepted branch name"
               exit 1
           fi
 
-          echo "-------------------------\n"
-          echo "[i] Loading the parameters file\n"
+          echo "-------------------------"
+          echo "[i] Loading the parameters file"
           source ".github/params/$WORKFLOW_NAME.env"
           if [ "$THREADS" == "" ]
           then
@@ -101,8 +101,8 @@ jobs:
               DIRECTORY_LIST_PROD="[\".\"]"
           fi
 
-          echo "-------------------------\n"
-          echo "[i] Exporting matrix parameters\n"
+          echo "-------------------------"
+          echo "[i] Exporting matrix parameters"
           echo "::set-output name=threads::$THREADS"
           echo "::set-output name=dir_list_dev::$DIRECTORY_LIST_DEV"
           echo "::set-output name=dir_list_test::$DIRECTORY_LIST_TEST"
