@@ -30,6 +30,12 @@ jobs:
       sha7: ${{ steps.settings.outputs.sha7 }}
       tmp_git_branch: ${{ steps.settings.outputs.tmp_git_branch }}
       cache_key: ${{ steps.settings.outputs.cache_key }}
+
+      workloadidentity_projectnumber: ${{ steps.settings.outputs.workloadidentity_projectnumber }}
+      workloadidentity_provider_test: ${{ steps.settings.outputs.workloadidentity_provider_test }}
+      workloadidentity_provider_prod: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
+      serviceaccount_test: ${{ steps.settings.outputs.serviceaccount_test }}
+      serviceaccount_prod: ${{ steps.settings.outputs.serviceaccount_prod }}
     steps:
       - name: Checkout
         id: checkout
