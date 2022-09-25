@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: sources/
           submodules: true
@@ -114,7 +114,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Setup Terraform
         id: setup
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
       - name: Set up Cloud SDK
         id: gcloud
         uses: google-github-actions/setup-gcloud@v0
@@ -185,7 +185,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Setup Terraform
         id: setup
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
       - name: Set up Cloud SDK
         id: gcloud
         uses: google-github-actions/setup-gcloud@v0
@@ -242,7 +242,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Setup Terraform
         id: setup
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
       - name: Set up Cloud SDK
         id: gcloud
         uses: google-github-actions/setup-gcloud@v0
