@@ -58,6 +58,11 @@ jobs:
           SHA7: ${{ steps.settings.outputs.sha7 }}
           TMP_GIT_BRANCH: ${{ steps.settings.outputs.tmp_git_branch }}
           CACHE_KEY: ${{ steps.settings.outputs.cache_key }}
+          WORKLOADIDENTITY_PROJECTNUMBER: ${{ steps.settings.outputs.workloadidentity_projectnumber }}
+          WORKLOADIDENTITY_PROVIDER_TEST: ${{ steps.settings.outputs.workloadidentity_provider_test }}
+          WORKLOADIDENTITY_PROVIDER_PROD: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
+          SERVICEACCOUNT_TEST: ${{ steps.settings.outputs.serviceaccount_test }}
+          SERVICEACCOUNT_PROD: ${{ steps.settings.outputs.serviceaccount_prod }}
         run: |
           sources/.github/scripts/common_init_settings_show.sh
       - name: Cache
@@ -189,6 +194,16 @@ jobs:
       - name: Set up Cloud SDK
         id: gcloud
         uses: google-github-actions/setup-gcloud@v0
+      - name: Authenticate Google
+        id: auth
+        env:
+          WORKLOADIDENTITY_PROJECTNUMBER: ${{ needs.init.outputs.workloadidentity_projectnumber }}
+          WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_test }}
+        uses: google-github-actions/auth@v0
+        with:
+          token_format: "access_token"
+          workload_identity_provider: projects/{{env.WORKLOADIDENTITY_PROJECTNUMBER}}/locations/global/workloadIdentityPools/{{env.WORKLOADIDENTITY_PROVIDER}}
+          service_account: ${{ secrets.SA_EMAIL }}
       - name: Cache
         id: cache
         env:
@@ -246,6 +261,16 @@ jobs:
       - name: Set up Cloud SDK
         id: gcloud
         uses: google-github-actions/setup-gcloud@v0
+      - name: Authenticate Google
+        id: auth
+        env:
+          WORKLOADIDENTITY_PROJECTNUMBER: ${{ needs.init.outputs.workloadidentity_projectnumber }}
+          WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_prod }}
+        uses: google-github-actions/auth@v0
+        with:
+          token_format: "access_token"
+          workload_identity_provider: projects/{{env.WORKLOADIDENTITY_PROJECTNUMBER}}/locations/global/workloadIdentityPools/{{env.WORKLOADIDENTITY_PROVIDER}}
+          service_account: ${{ secrets.SA_EMAIL }}
       - name: Cache
         id: cache
         env:

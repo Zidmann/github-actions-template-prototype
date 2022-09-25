@@ -21,7 +21,6 @@ echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SH
 
 echo "-------------------------"
 echo "[i] Defining the jobs to execute according the branch"
-echo "-------------------------"
 if [ "$GITHUB_BRANCH" == "main" ]
 	then
 	echo "::set-output name=execute_check_and_format::1"
@@ -68,3 +67,11 @@ echo "::set-output name=threads::$THREADS"
 echo "::set-output name=dir_list_dev::$DIRECTORY_LIST_DEV"
 echo "::set-output name=dir_list_test::$DIRECTORY_LIST_TEST"
 echo "::set-output name=dir_list_prod::$DIRECTORY_LIST_PROD"
+
+echo "-------------------------"
+echo "[i] Defining the authenticating information"
+echo "::set-output name=workloadidentity_projectnumber::$WORKLOADIDENTITY_PROJECTNUMBER"
+echo "::set-output name=workloadidentity_provider_test=$WORKLOADIDENTITY_PROVIDER_TEST"
+echo "::set-output name=workloadidentity_provider_prod=$WORKLOADIDENTITY_PROVIDER_PROD"
+echo "::set-output name=serviceaccount_test::$SERVICEACCOUNT_TEST"
+echo "::set-output name=serviceaccount_prod::$SERVICEACCOUNT_PROD"
