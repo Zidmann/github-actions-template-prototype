@@ -21,6 +21,7 @@ echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SH
 
 echo "-------------------------"
 echo "[i] Defining the jobs to execute according the branch"
+echo "-------------------------"
 if [ "$GITHUB_BRANCH" == "main" ]
 	then
 	echo "::set-output name=execute_check_and_format::1"

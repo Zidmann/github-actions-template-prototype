@@ -47,20 +47,19 @@ jobs:
           sources/.github/scripts/common_init_define.sh
       - name: Show output values
         id: show
+        env:
+          THREADS: ${{ steps.define.outputs.threads }}
+          DIR_LIST_DEV: ${{ steps.define.outputs.dir_list_dev }}
+          DIR_LIST_TEST: ${{ steps.define.outputs.dir_list_test }}
+          DIR_LIST_PROD: ${{ steps.define.outputs.dir_list_prod }}
+          EXECUTE_CHECK_AND_FORMAT: ${{ steps.define.outputs.execute_check_and_format }}
+          EXECUTE_TEST: ${{ steps.define.outputs.execute_test }}
+          EXECUTE_DEPLOY: ${{ steps.define.outputs.execute_deploy }}
+          SHA7: ${{ steps.define.outputs.sha7 }}
+          TMP_GIT_BRANCH: ${{ steps.define.outputs.tmp_git_branch }}
+          CACHE_KEY: ${{ steps.define.outputs.cache_key }}
         run: |
-          echo "threads=${{ steps.define.outputs.threads }}"
-
-          echo "dir_list_dev=${{ steps.define.outputs.dir_list_dev }}"
-          echo "dir_list_test=${{ steps.define.outputs.dir_list_test }}"
-          echo "dir_list_prod=${{ steps.define.outputs.dir_list_prod }}"
-
-          echo "execute_check_and_format=${{ steps.define.outputs.execute_check_and_format }}"
-          echo "execute_test=${{ steps.define.outputs.execute_test }}"
-          echo "execute_deploy=${{ steps.define.outputs.execute_deploy }}"
-
-          echo "sha7=${{ steps.define.outputs.sha7 }}"
-          echo "tmp_git_branch=${{ steps.define.outputs.tmp_git_branch }}"
-          echo "cache_key=${{ steps.define.outputs.cache_key }}"
+          sources/.github/scripts/common_init_print.sh
       - name: Cache
         id: cache
         uses: actions/cache@v3
@@ -90,7 +89,7 @@ jobs:
       - name: Terraform check code
         id: check
         env:
-          WORKING_DIR: ${{ matrix.directory }}
+          WORKING_DIR: ${{ github.workspace }}/sources/${{ matrix.directory }}
         run: |
             sources/.github/scripts/terraform_check.sh "$WORKING_DIR"
 
@@ -104,10 +103,6 @@ jobs:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
         content: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: sources/${{ matrix.directory }}
     steps:
       - name: Start SSH agent
         id: ssh
@@ -134,7 +129,7 @@ jobs:
       - name: Terraform format code
         id: format
         env:
-          WORKING_DIR: ${{ matrix.directory }}
+          WORKING_DIR: ${{ github.workspace }}/sources/${{ matrix.directory }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
         run: |
             sources/.github/scripts/terraform_fmt.sh "$WORKING_DIR" "$BRANCH_NAME"
