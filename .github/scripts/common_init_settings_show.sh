@@ -1,4 +1,4 @@
-echo "[i] Printing the variables"
+echo "[i] Showing the output values"
 
 echo "-------------------------"
 echo "threads=$THREADS"

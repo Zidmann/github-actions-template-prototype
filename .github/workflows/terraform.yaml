@@ -17,19 +17,19 @@ jobs:
     name: Initialization
     runs-on: ubuntu-latest
     outputs:
-      threads: ${{ steps.define.outputs.threads }}
+      threads: ${{ steps.settings.outputs.threads }}
 
-      dir_list_dev: ${{ steps.define.outputs.dir_list_dev }}
-      dir_list_test: ${{ steps.define.outputs.dir_list_test }}
-      dir_list_prod: ${{ steps.define.outputs.dir_list_prod }}
+      dir_list_dev: ${{ steps.settings.outputs.dir_list_dev }}
+      dir_list_test: ${{ steps.settings.outputs.dir_list_test }}
+      dir_list_prod: ${{ steps.settings.outputs.dir_list_prod }}
 
-      execute_check_and_format: ${{ steps.define.outputs.execute_check_and_format }}
-      execute_test: ${{ steps.define.outputs.execute_test }}
-      execute_deploy: ${{ steps.define.outputs.execute_deploy }}
+      execute_check_and_format: ${{ steps.settings.outputs.execute_check_and_format }}
+      execute_test: ${{ steps.settings.outputs.execute_test }}
+      execute_deploy: ${{ steps.settings.outputs.execute_deploy }}
 
-      sha7: ${{ steps.define.outputs.sha7 }}
-      tmp_git_branch: ${{ steps.define.outputs.tmp_git_branch }}
-      cache_key: ${{ steps.define.outputs.cache_key }}
+      sha7: ${{ steps.settings.outputs.sha7 }}
+      tmp_git_branch: ${{ steps.settings.outputs.tmp_git_branch }}
+      cache_key: ${{ steps.settings.outputs.cache_key }}
     steps:
       - name: Checkout
         id: checkout
@@ -38,34 +38,34 @@ jobs:
           path: sources/
           submodules: true
       - name: Define settings
-        id: define
+        id: settings
         env:
           GITHUB_REF: ${{ github.ref }} 
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
         run: |
-          sources/.github/scripts/common_init_define.sh
+          sources/.github/scripts/common_init_settings_define.sh
       - name: Show output values
         id: show
         env:
-          THREADS: ${{ steps.define.outputs.threads }}
-          DIR_LIST_DEV: ${{ steps.define.outputs.dir_list_dev }}
-          DIR_LIST_TEST: ${{ steps.define.outputs.dir_list_test }}
-          DIR_LIST_PROD: ${{ steps.define.outputs.dir_list_prod }}
-          EXECUTE_CHECK_AND_FORMAT: ${{ steps.define.outputs.execute_check_and_format }}
-          EXECUTE_TEST: ${{ steps.define.outputs.execute_test }}
-          EXECUTE_DEPLOY: ${{ steps.define.outputs.execute_deploy }}
-          SHA7: ${{ steps.define.outputs.sha7 }}
-          TMP_GIT_BRANCH: ${{ steps.define.outputs.tmp_git_branch }}
-          CACHE_KEY: ${{ steps.define.outputs.cache_key }}
+          THREADS: ${{ steps.settings.outputs.threads }}
+          DIR_LIST_DEV: ${{ steps.settings.outputs.dir_list_dev }}
+          DIR_LIST_TEST: ${{ steps.settings.outputs.dir_list_test }}
+          DIR_LIST_PROD: ${{ steps.settings.outputs.dir_list_prod }}
+          EXECUTE_CHECK_AND_FORMAT: ${{ steps.settings.outputs.execute_check_and_format }}
+          EXECUTE_TEST: ${{ steps.settings.outputs.execute_test }}
+          EXECUTE_DEPLOY: ${{ steps.settings.outputs.execute_deploy }}
+          SHA7: ${{ steps.settings.outputs.sha7 }}
+          TMP_GIT_BRANCH: ${{ steps.settings.outputs.tmp_git_branch }}
+          CACHE_KEY: ${{ steps.settings.outputs.cache_key }}
         run: |
-          sources/.github/scripts/common_init_print.sh
+          sources/.github/scripts/common_init_settings_show.sh
       - name: Cache
         id: cache
         uses: actions/cache@v3
         with:
           path: sources/
-          key: ${{ steps.define.outputs.cache_key }}
+          key: ${{ steps.settings.outputs.cache_key }}
 
   dev-check:
     name: Check directories
@@ -91,7 +91,7 @@ jobs:
         env:
           WORKING_DIR: ${{ github.workspace }}/sources/${{ matrix.directory }}
         run: |
-            sources/.github/scripts/terraform_check.sh "$WORKING_DIR"
+            sources/.github/scripts/terraform_check.sh
 
   dev-fmt:
     name: Format directories
@@ -132,7 +132,7 @@ jobs:
           WORKING_DIR: ${{ github.workspace }}/sources/${{ matrix.directory }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
         run: |
-            sources/.github/scripts/terraform_fmt.sh "$WORKING_DIR" "$BRANCH_NAME"
+            sources/.github/scripts/terraform_fmt.sh
 
   dev-pull-diff:
     name: Pull format
@@ -162,7 +162,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
         run: |
-            sources/.github/scripts/common_pull_diff.sh "$BRANCH_NAME"
+            sources/.github/scripts/common_pull_diff.sh
 
   test-stagging:
     name: Test on stagging
@@ -207,7 +207,7 @@ jobs:
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         run: |
             sources/.github/scripts/common_check_secrets.sh
-            sources/.github/scripts/terraform_deploy.sh "$SUFFIX_NAME"
+            sources/.github/scripts/terraform_deploy.sh
       - name: Clean environment
         id: clean
         env:
@@ -219,7 +219,7 @@ jobs:
         continue-on-error: true
         run: |
             sources/.github/scripts/common_check_secrets.sh
-            sources/.github/scripts/terraform_clean.sh "$SUFFIX_NAME"
+            sources/.github/scripts/terraform_clean.sh
 
   deploy-production:
     name: Deploy on production
