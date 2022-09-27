@@ -31,11 +31,16 @@ jobs:
       tmp_git_branch: ${{ steps.settings.outputs.tmp_git_branch }}
       cache_key: ${{ steps.settings.outputs.cache_key }}
 
+      state_gcp_bucket: ${{ steps.settings.outputs.state_gcp_bucket }}
       workloadidentity_projectnumber: ${{ steps.settings.outputs.workloadidentity_projectnumber }}
       workloadidentity_provider_test: ${{ steps.settings.outputs.workloadidentity_provider_test }}
       workloadidentity_provider_prod: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
       serviceaccount_test: ${{ steps.settings.outputs.serviceaccount_test }}
       serviceaccount_prod: ${{ steps.settings.outputs.serviceaccount_prod }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
     steps:
       - name: Checkout
         id: checkout
@@ -64,6 +69,7 @@ jobs:
           SHA7: ${{ steps.settings.outputs.sha7 }}
           TMP_GIT_BRANCH: ${{ steps.settings.outputs.tmp_git_branch }}
           CACHE_KEY: ${{ steps.settings.outputs.cache_key }}
+          STATE_GCP_BUCKET: ${{ steps.settings.outputs.state_gcp_bucket }}
           WORKLOADIDENTITY_PROJECTNUMBER: ${{ steps.settings.outputs.workloadidentity_projectnumber }}
           WORKLOADIDENTITY_PROVIDER_TEST: ${{ steps.settings.outputs.workloadidentity_provider_test }}
           WORKLOADIDENTITY_PROVIDER_PROD: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
@@ -87,7 +93,11 @@ jobs:
     strategy:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
-        content: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
+        directory: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: sources/${{ matrix.directory }}
     steps:
       - name: Cache
         id: cache
@@ -99,10 +109,8 @@ jobs:
           key: ${{ env.CACHE_KEY }}
       - name: Terraform check code
         id: check
-        env:
-          WORKING_DIR: ${{ github.workspace }}/sources/${{ matrix.directory }}
         run: |
-            sources/.github/scripts/terraform_check.sh
+          sources/.github/scripts/terraform_check.sh
 
   dev-fmt:
     name: Format directories
@@ -113,7 +121,11 @@ jobs:
     strategy:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
-        content: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
+        directory: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: sources/${{ matrix.directory }}
     steps:
       - name: Start SSH agent
         id: ssh
@@ -140,10 +152,11 @@ jobs:
       - name: Terraform format code
         id: format
         env:
-          WORKING_DIR: ${{ github.workspace }}/sources/${{ matrix.directory }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
+          WORKING_DIRECTORY: ${{ matrix.directory }}
         run: |
-            sources/.github/scripts/terraform_fmt.sh
+          sources/.github/scripts/terraform_fmt.sh
 
   dev-pull-diff:
     name: Pull format
@@ -151,6 +164,10 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.init.outputs.execute_check_and_format == '1'
     environment: development
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
     steps:
       - name: Start SSH agent
         id: ssh
@@ -172,8 +189,31 @@ jobs:
         id: pull
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-            sources/.github/scripts/common_pull_diff.sh
+          sources/.github/scripts/common_pull_prepare.sh
+      - name: Create pull request
+        id: cpr
+        env:
+          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
+          SHA7: ${{ needs.init.outputs.sha7 }}
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Terraform fmt
+          path: sources/
+          title: Workflow - Terraform
+          body: Update terraform files to canonical format using `terraform fmt` from the ${{ env.SHA7 }} commit
+          branch: ${{ env.BRANCH_NAME }}
+          delete-branch: true
+      - name: Terraform format code
+        id: pull
+        env:
+          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          sources/.github/scripts/common_pull_close.sh
 
   test-stagging:
     name: Test on stagging
@@ -184,7 +224,11 @@ jobs:
     strategy:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
-        content: ${{ fromJson(needs.init.outputs.dir_list_test) }}
+        directory: ${{ fromJson(needs.init.outputs.dir_list_test) }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: sources/${{ matrix.directory }}
     steps:
       - name: Start SSH agent
         id: ssh
@@ -228,8 +272,8 @@ jobs:
           GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         run: |
-            sources/.github/scripts/common_check_secrets.sh
-            sources/.github/scripts/terraform_deploy.sh
+          sources/.github/scripts/common_check_secrets.sh
+          sources/.github/scripts/terraform_deploy.sh
       - name: Clean environment
         id: clean
         env:
@@ -240,8 +284,8 @@ jobs:
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         continue-on-error: true
         run: |
-            sources/.github/scripts/common_check_secrets.sh
-            sources/.github/scripts/terraform_clean.sh
+          sources/.github/scripts/common_check_secrets.sh
+          sources/.github/scripts/terraform_clean.sh
 
   deploy-production:
     name: Deploy on production
@@ -252,7 +296,11 @@ jobs:
     strategy:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
-        content: ${{ fromJson(needs.init.outputs.dir_list_prod) }}
+        directory: ${{ fromJson(needs.init.outputs.dir_list_prod) }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: sources/${{ matrix.directory }}
     steps:
       - name: Start SSH agent
         id: ssh
@@ -295,6 +343,5 @@ jobs:
           IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
           GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
         run: |
-            sources/.github/scripts/common_check_secrets.sh
-            sources/.github/scripts/terraform_deploy.sh
-
+          sources/.github/scripts/common_check_secrets.sh
+          sources/.github/scripts/terraform_deploy.sh

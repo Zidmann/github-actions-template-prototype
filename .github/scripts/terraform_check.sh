@@ -1,3 +1,5 @@
-#!/bin/bash
+echo "[i] Initiating the Terraform project"
+terraform init
 
-echo "terraform_check"
+echo "[i] Validate the content of the Terraform project"
+terraform validate -no-color

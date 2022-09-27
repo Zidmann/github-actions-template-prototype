@@ -19,6 +19,7 @@ echo "tmp_git_branch=$TMP_GIT_BRANCH"
 echo "cache_key=$CACHE_KEY"
 
 echo "-------------------------"
+echo "state_gcp_bucket=$STATE_GCP_BUCKET"
 echo "workloadidentity_projectnumber=$WORKLOADIDENTITY_PROJECTNUMBER"
 echo "workloadidentity_provider_test=$WORKLOADIDENTITY_PROVIDER_TEST"
 echo "workloadidentity_provider_prod=$WORKLOADIDENTITY_PROVIDER_PROD"
