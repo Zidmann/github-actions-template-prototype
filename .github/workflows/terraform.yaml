@@ -282,7 +282,7 @@ jobs:
           IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
           GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
-        continue-on-error: true
+        if: always()
         run: |
           sources/.github/scripts/common_check_secrets.sh
           sources/.github/scripts/terraform_clean.sh
