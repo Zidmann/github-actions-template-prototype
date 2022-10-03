@@ -206,7 +206,7 @@ jobs:
           branch: ${{ env.BRANCH_NAME }}
           delete-branch: true
       - name: Terraform format code
-        id: pull
+        id: pull-code
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           GITHUB_REPOSITORY: ${{ github.repository }}
