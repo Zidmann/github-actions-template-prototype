@@ -4,5 +4,5 @@ terraform init -backend-config="bucket=$STATE_GCP_BUCKET" -backend-config="prefi
 echo "[i] Printing the Terraform plan"
 terraform plan -no-color
 
-echo "[i] Applying the Terraform changes"
+echo -e "\n[i] Applying the Terraform changes"
 terraform apply -auto-approve -var "project_id=$PROJECT_ID" -var "bucket_registry=$GCP_BUCKET_REGISTRY" $EXTRA_TERRAFORM_VARS_CMD
