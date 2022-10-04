@@ -110,6 +110,8 @@ jobs:
       - name: Terraform check code
         id: check
         run: |
+          pwd
+          ls
           sources/.github/scripts/terraform_check.sh
 
   dev-fmt:
