@@ -57,7 +57,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_define.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_define.sh
       - name: Show output values
         id: show
         env:
@@ -78,7 +78,7 @@ jobs:
           SERVICEACCOUNT_TEST: ${{ steps.settings.outputs.serviceaccount_test }}
           SERVICEACCOUNT_PROD: ${{ steps.settings.outputs.serviceaccount_prod }}
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_show.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_show.sh
       - name: Cache
         id: cache
         uses: actions/cache@v3
@@ -114,7 +114,7 @@ jobs:
       - name: Terraform check code
         id: check
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_check.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_check.sh
 
   dev-fmt:
     name: Format directories
@@ -162,7 +162,7 @@ jobs:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           WORKING_DIRECTORY: ${{ matrix.directory }}
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_fmt.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_fmt.sh
 
   dev-pull-diff:
     name: Pull format
@@ -199,7 +199,7 @@ jobs:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_prepare.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_prepare.sh
       - name: Create pull request
         id: cpr
         env:
@@ -221,7 +221,7 @@ jobs:
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
           PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_close.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_close.sh
 
   test-stagging:
     name: Test on stagging
@@ -282,8 +282,8 @@ jobs:
           GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
       - name: Clean environment
         id: clean
         env:
@@ -294,8 +294,8 @@ jobs:
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         if: always()
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_clean.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_clean.sh
 
   deploy-production:
     name: Deploy on production
@@ -355,5 +355,5 @@ jobs:
           IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
           GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
         run: |
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
-          {{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
