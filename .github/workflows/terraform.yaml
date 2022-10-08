@@ -193,7 +193,7 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Terraform format code
+      - name: Prepare pull
         id: pull
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
@@ -213,7 +213,7 @@ jobs:
           body: Update terraform files to canonical format using `terraform fmt` from the ${{ env.SHA7 }} commit
           branch: ${{ env.BRANCH_NAME }}
           delete-branch: true
-      - name: Terraform format code
+      - name: Close pull
         id: pull-code
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
