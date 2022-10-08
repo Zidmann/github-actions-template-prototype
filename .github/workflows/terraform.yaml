@@ -170,6 +170,8 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.init.outputs.execute_check_and_format == '1'
     environment: development
+    outputs:
+      pull_request_opened: ${{ steps.settings.outputs.pull_request_opened }}
     defaults:
       run:
         shell: bash
@@ -227,7 +229,7 @@ jobs:
     name: Test on stagging
     needs: [init, dev-pull-diff]
     runs-on: ubuntu-latest
-    if: needs.init.outputs.execute_test == '1'
+    if: needs.init.outputs.execute_test == '1' && dev-pull-diff.outputs.pull_request_opened == '0'
     environment: testing
     strategy:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
@@ -301,7 +303,7 @@ jobs:
     name: Deploy on production
     needs: [init, test-stagging]
     runs-on: ubuntu-latest
-    if: needs.init.outputs.execute_deploy == '1'
+    if: needs.init.outputs.execute_deploy == '1' && dev-pull-diff.outputs.pull_request_opened == '0'
     environment: production
     strategy:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
