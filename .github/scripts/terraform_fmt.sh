@@ -48,9 +48,6 @@ then
 		echo -e "\n[-] Commit failed - new attempt in 5 seconds"
 		sleep 5
 	done
-
-	echo "[i] Stopping the workflow to let the pull request to be approved"
-	exit 1
 else
 	echo "[i] Nothing to commit"
 fi
