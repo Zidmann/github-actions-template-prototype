@@ -26,8 +26,7 @@ git config --global user.name "GitHub Robot"
 git config pull.rebase true
 
 echo -e "\n[i] Creating the temporary branch"
-git branch "$BRANCH_NAME"
-git push originssh "$BRANCH_NAME"
+git checkout -b "$BRANCH_NAME"
 
 echo -e "\n[i] Processing the content to commit"
 if [ "$(git status --porcelain)" != "" ]
@@ -36,7 +35,6 @@ then
 	git status --porcelain 2>/dev/null
 
 	echo -e "\n[i] Commiting the changes"
-	git checkout "$BRANCH_NAME"
 	git commit -a -m "Change in $WORKING_DIRECTORY directory"
 
 	while true
