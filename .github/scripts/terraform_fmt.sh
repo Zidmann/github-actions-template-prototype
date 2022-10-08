@@ -26,7 +26,7 @@ git push origin "$BRANCH_NAME"
 echo -e "\n[i] Processing the content to commit"
 if [ "$(git status --porcelain)" != "" ]
 then
-	echo "[i] Changes to commit"
+	echo -e "\n[i] Changes to commit"
 	git status --porcelain 2>/dev/null
 
 	echo -e "\n[i] Configuring the Github settings"
