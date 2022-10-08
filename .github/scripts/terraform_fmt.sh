@@ -21,7 +21,7 @@ rm -vrf .terraform/
 
 echo -e "\n[i] Creating the temporary branch"
 git branch "$BRANCH_NAME"
-git push origin "$BRANCH_NAME"
+git push originssh "$BRANCH_NAME"
 
 echo -e "\n[i] Processing the content to commit"
 if [ "$(git status --porcelain)" != "" ]
