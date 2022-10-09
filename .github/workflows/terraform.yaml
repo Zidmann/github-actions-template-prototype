@@ -177,7 +177,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: sources/
+        working-directory: .
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:

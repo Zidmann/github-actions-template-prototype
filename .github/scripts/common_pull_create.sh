@@ -1,3 +1,6 @@
+echo "[i] Changing directory"
+cd sources/
+
 echo "[i] Creating a pull request"
 PR_URL=$(gh pr create -B "$BASE_BRANCH_NAME" -H "$BRANCH_NAME" --title "$TITLE" --body "$BODY")
 if [ "$?" != "0" ]
