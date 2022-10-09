@@ -95,6 +95,7 @@ jobs:
     if: needs.init.outputs.execute_check_and_format == '1'
     environment: development
     strategy:
+      fail-fast: false
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
         directory: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
@@ -125,6 +126,7 @@ jobs:
     if: needs.init.outputs.execute_check_and_format == '1'
     environment: development
     strategy:
+      fail-fast: false
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
         directory: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
@@ -232,6 +234,7 @@ jobs:
     if: ${{ (needs.init.outputs.execute_test == '1') && (needs.dev-pull-diff.outputs.pull_request_opened == '0') }}
     environment: testing
     strategy:
+      fail-fast: false
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
         directory: ${{ fromJson(needs.init.outputs.dir_list_test) }}
@@ -306,6 +309,7 @@ jobs:
     if: ${{ (needs.init.outputs.execute_deploy == '1') && (needs.dev-pull-diff.outputs.pull_request_opened == '0') }}
     environment: production
     strategy:
+      fail-fast: false
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
         directory: ${{ fromJson(needs.init.outputs.dir_list_prod) }}
