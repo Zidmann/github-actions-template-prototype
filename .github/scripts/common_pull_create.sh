@@ -13,7 +13,7 @@ then
 fi
 
 echo "[i] Exporting the pull request information"
-GITHUB_BRANCH=${PR_URL##*/}
+PR_NUMBER=${PR_URL##*/}
 echo "PR_URL=$PR_URL"
 echo "PR_NUMBER=$PR_NUMBER"
 echo "::set-output name=pr_url::$PR_URL"
