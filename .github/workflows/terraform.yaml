@@ -169,7 +169,7 @@ jobs:
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_fmt.sh
 
   dev-pull-diff:
-    name: Pull format code
+    name: Pull formatted code
     needs: [init, dev-fmt]
     runs-on: ubuntu-latest
     if: needs.init.outputs.execute_check_and_format == '1'
