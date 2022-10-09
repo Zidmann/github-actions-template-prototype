@@ -20,6 +20,7 @@ then
 	exit 0
 else
 	echo "[i] Changes detected to merge"
+	echo "$GIT_DIFF"
 fi
 
 echo "[i] Creating a pull request"
