@@ -205,21 +205,23 @@ jobs:
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_prepare.sh
       - name: Create pull request
-        id: cpr
+        id: create-pr
         env:
           BASE_BRANCH_NAME: ${{ needs.init.outputs.git_branch }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
-          SHA7: ${{ needs.init.outputs.sha7 }}
+          TITLE: 'Workflow - Terraform'
+          BODY: 'Update terraform files to canonical format using `terraform fmt` from the ${{ needs.init.outputs.sha7 }} commit'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create -B ${{ env.BASE_BRANCH_NAME }}  -H ${{ env.BRANCH_NAME }} --title 'Workflow - Terraform' --body 'Update terraform files to canonical format using `terraform fmt` from the ${{ env.SHA7 }} commit'
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_create.sh
       - name: Close pull
         id: pull-code
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
-          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
+          PR_URL: ${{ steps.create-pr.outputs.pr_url }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pr_number }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_close.sh
 
