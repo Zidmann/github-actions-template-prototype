@@ -4,7 +4,6 @@ cd sources/
 echo "[i] Pulling all branches"
 git remote add originssh "git@github.com:$GITHUB_REPOSITORY.git"
 git pull originssh "$BRANCH_NAME"
-git branch -a
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
 GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/originssh/$BRANCH_NAME")
@@ -20,7 +19,6 @@ then
 	exit 0
 else
 	echo "[i] Changes detected to merge"
-	echo "$GIT_DIFF"
 fi
 
 echo "[i] Creating a pull request"
