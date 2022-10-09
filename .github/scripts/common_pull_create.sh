@@ -1,13 +1,13 @@
 echo "[i] Changing directory"
 cd sources/
 
-echo "[i] Listing all branches"
+echo "[i] Pulling all branches"
 git remote add originssh "git@github.com:$GITHUB_REPOSITORY.git"
-git pull originssh -a
+git pull originssh "$BRANCH_NAME"
 git branch -a
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
-GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "$BRANCH_NAME")
+GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/originssh/$BRANCH_NAME")
 if [ "$?" != "0" ]
 then
 	echo "[-] Error during comparing the branches"
