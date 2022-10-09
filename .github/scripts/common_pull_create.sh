@@ -2,7 +2,8 @@ echo "[i] Changing directory"
 cd sources/
 
 echo "[i] Listing all branches"
-git pull -a
+git remote add originssh "git@github.com:$GITHUB_REPOSITORY.git"
+git pull originssh -a
 git branch -a
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
