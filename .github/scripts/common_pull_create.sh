@@ -2,6 +2,7 @@ echo "[i] Changing directory"
 cd sources/
 
 echo "[i] Listing all branches"
+git pull -a
 git branch -a
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
