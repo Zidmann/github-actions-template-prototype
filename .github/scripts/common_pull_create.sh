@@ -2,6 +2,7 @@ echo "[i] Changing directory"
 cd sources/
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
+git branch
 NB_DIFF=$(git diff "$BASE_BRANCH_NAME" "$BRANCH_NAME")
 if [ "$NB_DIFF" == "0" ]
 then
