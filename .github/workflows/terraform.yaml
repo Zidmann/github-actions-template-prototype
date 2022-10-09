@@ -70,6 +70,7 @@ jobs:
           EXECUTE_TEST: ${{ steps.settings.outputs.execute_test }}
           EXECUTE_DEPLOY: ${{ steps.settings.outputs.execute_deploy }}
           SHA7: ${{ steps.settings.outputs.sha7 }}
+          GIT_BRANCH: ${{ steps.settings.outputs.git_branch }}
           TMP_GIT_BRANCH: ${{ steps.settings.outputs.tmp_git_branch }}
           CACHE_KEY: ${{ steps.settings.outputs.cache_key }}
           STATE_GCP_BUCKET: ${{ steps.settings.outputs.state_gcp_bucket }}
@@ -209,6 +210,7 @@ jobs:
           BASE_BRANCH_NAME: ${{ needs.init.outputs.git_branch }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           SHA7: ${{ needs.init.outputs.sha7 }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create -B ${{ env.BASE_BRANCH_NAME }}  -H ${{ env.BRANCH_NAME }} --title 'Workflow - Terraform' --body 'Update terraform files to canonical format using `terraform fmt` from the ${{ env.SHA7 }} commit'
       - name: Close pull
