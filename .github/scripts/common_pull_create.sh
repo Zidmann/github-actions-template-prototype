@@ -13,7 +13,7 @@ then
 	echo "[-] Error during comparing the branches"
 	exit 1
 fi
-NB_DIFF=$(echo "$GIT_DIFF" | wc -l)
+NB_DIFF=$(echo "$GIT_DIFF" | awk NF | wc -l)
 if [ "$NB_DIFF" == "0" ]
 then
 	echo "[i] No changes to merge in a pull request"
