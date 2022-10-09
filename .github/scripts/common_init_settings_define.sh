@@ -16,6 +16,7 @@ echo "GITHUB_BRANCH=$GITHUB_BRANCH"
 echo "-------------------------"
 echo "[i] Exporting basics parameters"
 echo "::set-output name=sha7::$GITHUB_SHA7"
+echo "::set-output name=git_branch::${GITHUB_BRANCH}"
 echo "::set-output name=tmp_git_branch::tmp_${WORKFLOW_NAME}_${GITHUB_SHA7}"
 echo "::set-output name=cache_key::${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}"
 

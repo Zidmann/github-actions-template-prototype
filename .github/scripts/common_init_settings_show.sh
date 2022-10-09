@@ -15,6 +15,7 @@ echo "execute_deploy=$EXECUTE_DEPLOY"
 
 echo "-------------------------"
 echo "sha7=$SHA7"
+echo "git_branch=$GIT_BRANCH"
 echo "tmp_git_branch=$TMP_GIT_BRANCH"
 echo "cache_key=$CACHE_KEY"
 

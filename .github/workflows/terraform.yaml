@@ -28,6 +28,7 @@ jobs:
       execute_deploy: ${{ steps.settings.outputs.execute_deploy }}
 
       sha7: ${{ steps.settings.outputs.sha7 }}
+      git_branch: ${{ steps.settings.outputs.git_branch }}
       tmp_git_branch: ${{ steps.settings.outputs.tmp_git_branch }}
       cache_key: ${{ steps.settings.outputs.cache_key }}
 
@@ -175,7 +176,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: .
+        working-directory: sources/
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
@@ -205,16 +206,11 @@ jobs:
       - name: Create pull request
         id: cpr
         env:
+          BASE_BRANCH_NAME: ${{ needs.init.outputs.git_branch }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           SHA7: ${{ needs.init.outputs.sha7 }}
-        uses: peter-evans/create-pull-request@v3
-        with:
-          commit-message: Terraform fmt
-          path: sources/
-          title: Workflow - Terraform
-          body: Update terraform files to canonical format using `terraform fmt` from the ${{ env.SHA7 }} commit
-          branch: ${{ env.BRANCH_NAME }}
-          delete-branch: true
+        run: |
+          gh pr create -B ${{ env.BASE_BRANCH_NAME }}  -H ${{ env.BRANCH_NAME }} --title 'Workflow - Terraform' --body 'Update terraform files to canonical format using `terraform fmt` from the ${{ env.SHA7 }} commit'
       - name: Close pull
         id: pull-code
         env:
