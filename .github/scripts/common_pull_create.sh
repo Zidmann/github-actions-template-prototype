@@ -17,7 +17,7 @@ if [ "$NB_DIFF" == "0" ]
 then
 	echo "[i] No changes to merge in a pull request"
 	echo "[i] Deleting the $BRANCH_NAME branch"
-	git branch -d originssh "$BRANCH_NAME"
+	git push -d originssh "$BRANCH_NAME"
 	exit 0
 else
 	echo "[i] Changes detected to merge"
