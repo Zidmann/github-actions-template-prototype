@@ -5,7 +5,13 @@ echo "[i] Listing all branches"
 git branch -a
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
-NB_DIFF=$(git diff "$BASE_BRANCH_NAME" "$BRANCH_NAME" | wc -l)
+GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "$BRANCH_NAME")
+if [ "$?" != "0" ]
+then
+	echo "[-] Error during comparing the branches"
+	exit 1
+fi
+NB_DIFF=$(echo "$GIT_DIFF" | wc -l)
 if [ "$NB_DIFF" == "0" ]
 then
 	echo "[i] No changes to merge in a pull request"
