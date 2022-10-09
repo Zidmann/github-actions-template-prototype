@@ -213,7 +213,6 @@ jobs:
           BODY: 'Update terraform files to canonical format using `terraform fmt` from the ${{ needs.init.outputs.sha7 }} commit'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create -B ${{ env.BASE_BRANCH_NAME }}  -H ${{ env.BRANCH_NAME }} --title 'Workflow - Terraform' --body 'Update terraform files to canonical format using `terraform fmt` from the ${{ env.SHA7 }} commit'
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_create.sh
       - name: Close pull
         id: pull-code
