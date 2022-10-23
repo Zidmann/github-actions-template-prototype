@@ -1,1 +1,1 @@
-find sources/ -type f -exec "${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/function_replace_variables.sh" {} \;
+find sources/ -type f -exec "$GITHUB_WORKSPACE/sources/.github/scripts/function_replace_variables.sh" {} \;
