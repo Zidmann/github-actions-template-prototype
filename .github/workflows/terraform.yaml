@@ -129,14 +129,6 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
-      - name: Configure SSH
-        id: ssh
-        if: env.SSH_PRIVATE_KEY
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
       - name: Setup Terraform
         id: setup
         uses: hashicorp/setup-terraform@v2
@@ -151,6 +143,14 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
+      - name: Configure SSH
+        id: ssh
+        if: env.SSH_PRIVATE_KEY
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
       - name: Terraform format code
         id: format
         env:
