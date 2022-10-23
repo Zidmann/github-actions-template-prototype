@@ -65,28 +65,6 @@ jobs:
           WORKFLOW_NAME: "terraform"
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_define.sh
-      - name: Show output values
-        id: show
-        env:
-          THREADS: ${{ steps.settings.outputs.threads }}
-          DIR_LIST_DEV: ${{ steps.settings.outputs.dir_list_dev }}
-          DIR_LIST_TEST: ${{ steps.settings.outputs.dir_list_test }}
-          DIR_LIST_PROD: ${{ steps.settings.outputs.dir_list_prod }}
-          EXECUTE_CHECK_AND_FORMAT: ${{ steps.settings.outputs.execute_check_and_format }}
-          EXECUTE_TEST: ${{ steps.settings.outputs.execute_test }}
-          EXECUTE_DEPLOY: ${{ steps.settings.outputs.execute_deploy }}
-          SHA7: ${{ steps.settings.outputs.sha7 }}
-          GIT_BRANCH: ${{ steps.settings.outputs.git_branch }}
-          TMP_GIT_BRANCH: ${{ steps.settings.outputs.tmp_git_branch }}
-          CACHE_KEY: ${{ steps.settings.outputs.cache_key }}
-          STATE_GCP_BUCKET: ${{ steps.settings.outputs.state_gcp_bucket }}
-          WORKLOADIDENTITY_PROJECTNUMBER: ${{ steps.settings.outputs.workloadidentity_projectnumber }}
-          WORKLOADIDENTITY_PROVIDER_TEST: ${{ steps.settings.outputs.workloadidentity_provider_test }}
-          WORKLOADIDENTITY_PROVIDER_PROD: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
-          SERVICEACCOUNT_TEST: ${{ steps.settings.outputs.serviceaccount_test }}
-          SERVICEACCOUNT_PROD: ${{ steps.settings.outputs.serviceaccount_prod }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_show.sh
       - name: Cache
         id: cache
         uses: actions/cache@v3
