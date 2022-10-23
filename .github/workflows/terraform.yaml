@@ -98,14 +98,14 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Start SSH agent
+      - name: Configure SSH
         id: ssh
         if: env.SSH_PRIVATE_KEY
         env:
+          HOME_DIR: ${{ env.GITHUB_WORKSPACE }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
       - name: Terraform check code
         id: check
         run: |
