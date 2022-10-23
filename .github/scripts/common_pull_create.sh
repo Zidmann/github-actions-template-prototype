@@ -22,7 +22,7 @@ else
 fi
 
 echo "[i] Creating a pull request"
-gh --git-protocol ssh
+gh auth login --git-protocol ssh
 PR_URL=$(gh pr create -B "$BASE_BRANCH_NAME" -H "$BRANCH_NAME" --title "$TITLE" --body "$BODY")
 if [ "$?" != "0" ]
 then
