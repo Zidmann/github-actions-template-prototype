@@ -199,7 +199,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          USERNAME: 
+          XXX_GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_prepare.sh
       - name: Create pull request
