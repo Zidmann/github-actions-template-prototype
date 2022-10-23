@@ -199,13 +199,13 @@ jobs:
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_prepare.sh
       - name: Create pull request
         id: create-pr
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_BRANCH_NAME: ${{ needs.init.outputs.git_branch }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           TITLE: 'Workflow - Terraform'
