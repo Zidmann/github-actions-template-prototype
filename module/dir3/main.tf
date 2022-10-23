@@ -5,7 +5,7 @@ provider "google" {
 }
 
 module "module" {
-  source = "git@github.com:$GITHUB_REPOSITORY//module/dir1"
+  source = "git@github.com:$GITHUB_REPOSITORY.git//module/dir1"
 
   project_id     = var.project_id
   project_region = var.project_region
