@@ -1,7 +1,7 @@
-SSH_DIR="$HOME/.ssh"
-
 echo "-------------------------"
 echo "[i] Creating SSH directory"
+SSH_DIR="$HOME/.ssh"
+
 mkdir -p "$SSH_DIR"
 chmod 700 "$SSH_DIR"
 
