@@ -2,7 +2,8 @@ echo "[i] Changing directory"
 cd sources/
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
-GIT_DIFF=$(git diff "remotes/origin/$BASE_BRANCH_NAME" "remotes/origin/$BRANCH_NAME")
+git pull origin "$$BRANCH_NAME"
+GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/origin/$BRANCH_NAME")
 if [ "$?" != "0" ]
 then
 	echo "[-] Error during comparing the branches"
