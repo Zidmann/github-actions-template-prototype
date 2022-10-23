@@ -21,7 +21,7 @@ rm -vrf .terraform/
 
 echo -e "\n[i] Configuring the Github settings"
 git remote remove origin
-git remote add origin "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+git remote add origin "https://$GITHUB_TOKEN@github.com:$GITHUB_REPOSITORY.git"
 git config --global user.email "github-robot@github.com[noreply]"
 git config --global user.name "GitHub Robot"
 git config pull.rebase true
