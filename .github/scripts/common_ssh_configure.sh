@@ -30,3 +30,5 @@ echo "-------------------------"
 echo "[i] Configuring the SSH agent"
 eval "$(ssh-agent)"
 ssh-add "$GITHUB_KEY"
+ssh-add -l
+ssh-add -L
