@@ -28,4 +28,20 @@ echo "$SSH_PRIVATE_KEY" >> "$GITHUB_KEY"
 
 echo "-------------------------"
 echo "[i] Configuring the SSH agent"
+TMP_FILE="/tmp/ssh-agent.$$"
+
+touch "$TMP_FILE"
+chmod 600 "$TMP_FILE"
+
+ssh-agent > "$TMP_FILE"
+
+TMP_SH_FILE="/tmp/ssh-agent.$$"
+
+touch "$TMP_SH_FILE"
+chmod 700 "$TMP_SH_FILE"
+
+grep "^SSH_AUTH_SOCK=" "$TMP_FILE" | awk -F';' '{print "export "$1}' >  "$TMP_SH_FILE"
+grep "^SSH_AGENT_PID=" "$TMP_FILE" | awk -F';' '{print "export "$1}' >> "$TMP_SH_FILE"
+
+"$TMP_SH_FILE"
 ssh-add "$GITHUB_KEY"
