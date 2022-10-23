@@ -1,3 +1,5 @@
+ls ~/.ssh
+
 echo "[i] Initiating the Terraform project"
 terraform init
 
