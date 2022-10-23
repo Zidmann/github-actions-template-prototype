@@ -39,7 +39,5 @@ fi
 
 echo "[i] Exporting the pull request information"
 PR_NUMBER=${PR_URL##*/}
-echo "PR_URL=$PR_URL"
-echo "PR_NUMBER=$PR_NUMBER"
-echo "::set-output name=pr_url::$PR_URL"
-echo "::set-output name=pr_number::$PR_NUMBER"
+echo "pr_url=$PR_URL" | tee -a $GITHUB_OUTPUT
+echo "pr_number=$PR_NUMBER" | tee -a $GITHUB_OUTPUT

@@ -11,4 +11,4 @@ else
 	PULL_REQUEST_OPENED=1
 fi
 
-echo "::set-output name=pull_request_opened::$PULL_REQUEST_OPENED"
+echo "pull_request_opened=$PULL_REQUEST_OPENED" | tee -a $GITHUB_OUTPUT
