@@ -102,6 +102,7 @@ jobs:
         id: ssh
         if: env.SSH_PRIVATE_KEY
         env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh

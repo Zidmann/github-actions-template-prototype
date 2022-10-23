@@ -32,3 +32,17 @@ eval "$(ssh-agent)"
 ssh-add "$GITHUB_KEY"
 ssh-add -l
 ssh-add -L
+
+echo "-------------------------"
+echo "[i] Configuring the GIT command"
+git config --global --replace-all url."git@key-github.github.com:$GITHUB_REPOSITORY".insteadOf "https://github.com/$GITHUB_REPOSITORY"
+git config --global --add url."git@key-github.github.com:$GITHUB_REPOSITORY".insteadOf "git@github.com:$GITHUB_REPOSITORY"
+git config --global --add url."git@key-github.github.com:$GITHUB_REPOSITORY".insteadOf "ssh://git@github.com/$GITHUB_REPOSITORY"
+
+SSH_CONFIG="$SSH_DIR/config"
+echo "" >> "$SSH_CONFIG"
+echo "Host key-github.github.com" >> "$SSH_CONFIG"
+echo "    HostName github.com" >> "$SSH_CONFIG"
+echo "    IdentityFile $GITHUB_KEY" >> "$SSH_CONFIG"
+echo "    IdentitiesOnly yes" >> "$SSH_CONFIG"
+
