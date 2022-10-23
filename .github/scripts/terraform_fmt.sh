@@ -20,8 +20,6 @@ echo "[i] Deleting the Terraform internal data"
 rm -vrf .terraform/
 
 echo -e "\n[i] Configuring the Github settings"
-git remote remove origin
-git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
 git config --global user.email "github-robot@github.com[noreply]"
 git config --global user.name "GitHub Robot"
 git config pull.rebase true

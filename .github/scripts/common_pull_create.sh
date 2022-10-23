@@ -1,10 +1,6 @@
 echo "[i] Changing directory"
 cd sources/
 
-echo "[i] Pulling all branches"
-git remote remove origin
-git remote add origin "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
-
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
 GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/origin/$BRANCH_NAME")
 if [ "$?" != "0" ]

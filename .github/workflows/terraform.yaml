@@ -98,7 +98,7 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Start SSH agent
+      - name: Configure SSH
         id: ssh
         if: env.SSH_PRIVATE_KEY
         env:
@@ -129,14 +129,14 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
-      - name: Start SSH agent
+      - name: Configure SSH
         id: ssh
         if: env.SSH_PRIVATE_KEY
         env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
       - name: Setup Terraform
         id: setup
         uses: hashicorp/setup-terraform@v2
@@ -155,7 +155,7 @@ jobs:
         id: format
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           WORKING_DIRECTORY: ${{ matrix.directory }}
         run: |
@@ -179,14 +179,14 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: Start SSH agent
+      - name: Configure SSH
         id: ssh
         if: env.SSH_PRIVATE_KEY
         env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
       - name: Cache
         id: cache
         env:
@@ -200,7 +200,7 @@ jobs:
         env:
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: 
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_prepare.sh
@@ -208,7 +208,7 @@ jobs:
         id: create-pr
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_BRANCH_NAME: ${{ needs.init.outputs.git_branch }}
           BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
           TITLE: 'Workflow - Terraform'
