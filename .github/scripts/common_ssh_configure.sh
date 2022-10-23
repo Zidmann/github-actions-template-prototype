@@ -30,8 +30,6 @@ echo "-------------------------"
 echo "[i] Configuring the SSH agent"
 eval "$(ssh-agent)"
 ssh-add "$GITHUB_KEY"
-ssh-add -l
-ssh-add -L
 
 echo "-------------------------"
 echo "[i] Configuring the GIT command"
@@ -45,4 +43,3 @@ echo "Host key-github.github.com" >> "$SSH_CONFIG"
 echo "    HostName github.com" >> "$SSH_CONFIG"
 echo "    IdentityFile $GITHUB_KEY" >> "$SSH_CONFIG"
 echo "    IdentitiesOnly yes" >> "$SSH_CONFIG"
-
