@@ -1,4 +1,4 @@
-SSH_DIR="$HOME_DIR/.ssh"
+SSH_DIR="$HOME/.ssh"
 
 echo "-------------------------"
 echo "[i] Adding the GitHub keys in the known hosts"
