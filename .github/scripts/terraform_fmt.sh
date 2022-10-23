@@ -20,7 +20,8 @@ echo "[i] Deleting the Terraform internal data"
 rm -vrf .terraform/
 
 echo -e "\n[i] Configuring the Github settings"
-git remote add originssh "git@github.com:$GITHUB_REPOSITORY.git"
+git remote remove origin
+git remote add origin "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
 git config --global user.email "github-robot@github.com[noreply]"
 git config --global user.name "GitHub Robot"
 git config pull.rebase true
@@ -40,10 +41,10 @@ then
 	while true
 	do
 		echo -e "\n[i] Pull all the changes from the different jobs"
-		git pull originssh "$BRANCH_NAME"
+		git pull origin "$BRANCH_NAME"
 
 		echo -e "\n[i] Attempt to push the changes"
-		git push originssh "$BRANCH_NAME" && break
+		git push origin "$BRANCH_NAME" && break
 
 		echo -e "\n[-] Commit failed - new attempt in 5 seconds"
 		sleep 5

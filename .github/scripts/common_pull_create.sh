@@ -2,11 +2,11 @@ echo "[i] Changing directory"
 cd sources/
 
 echo "[i] Pulling all branches"
-git remote add originssh "git@github.com:$GITHUB_REPOSITORY.git"
-git pull originssh "$BRANCH_NAME"
+git remote remove origin
+git remote add origin "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
 
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
-GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/originssh/$BRANCH_NAME")
+GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/origin/$BRANCH_NAME")
 if [ "$?" != "0" ]
 then
 	echo "[-] Error during comparing the branches"
@@ -17,7 +17,7 @@ if [ "$NB_DIFF" == "0" ]
 then
 	echo "[i] No changes to merge in a pull request"
 	echo "[i] Deleting the $BRANCH_NAME branch"
-	git push -d originssh "$BRANCH_NAME"
+	git push -d origin "$BRANCH_NAME"
 	exit 0
 else
 	echo "[i] Changes detected to merge"
