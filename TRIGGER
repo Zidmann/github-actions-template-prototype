@@ -1,5 +1,6 @@
 424242424242424242
 
+https://github.com/webfactory/ssh-agent/blob/master/index.js
 
       - name: Configure SSH
         id: ssh
@@ -8,4 +9,15 @@
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
+
+
+    homePath: os.userInfo().homedir,
+    sshAgentCmd: 'ssh-agent',
+    sshAddCmd: 'ssh-add',
+    gitCmd: 'git'
+
+
+child_process.execFileSync(sshAddCmd, ['-'], { input: key.trim() + "\n" });
+=> ssh-add <KEY>
+
 

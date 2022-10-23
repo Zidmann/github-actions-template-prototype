@@ -25,3 +25,7 @@ touch "$GITHUB_KEY"
 chmod 600 "$GITHUB_KEY"
 
 echo "$SSH_PRIVATE_KEY" >> "$GITHUB_KEY"
+
+echo "-------------------------"
+echo "[i] Configuring the SSH agent"
+ssh-add "$GITHUB_KEY"
