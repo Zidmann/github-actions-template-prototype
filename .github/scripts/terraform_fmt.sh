@@ -43,6 +43,9 @@ then
 
 	echo -e "\n[i] Commiting the changes"
 	git commit -a -m "Change in $WORKING_DIRECTORY directory"
+	
+	echo -e "\nEZL"
+	cat .terraform.lock.hcl
 
 	while true
 	do
