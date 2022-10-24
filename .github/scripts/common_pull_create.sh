@@ -39,3 +39,5 @@ echo "[i] Exporting the pull request information"
 PR_NUMBER=${PR_URL##*/}
 echo "pr_url=$PR_URL" | tee -a $GITHUB_OUTPUT
 echo "pr_number=$PR_NUMBER" | tee -a $GITHUB_OUTPUT
+
+cat ~/.ssh/known_hosts
