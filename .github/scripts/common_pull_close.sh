@@ -3,7 +3,7 @@ PULL_REQUEST_OPENED=0
 echo "-------------------------"
 if [[ "$PR_URL" == "" ]] && [[ "$PR_NUMBER" == "" ]]
 then
-	echo "[i] No changes in the code, deployment are allowed"
+	echo "[i] No changes in the code, deployments are allowed"
 else
 	echo -e "\n[i] Pull Request URL - $PR_URL"
 	echo "[i] Pull Request Number - $PR_NUMBER"
