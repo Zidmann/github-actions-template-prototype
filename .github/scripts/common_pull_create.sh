@@ -1,3 +1,4 @@
+echo "EZL"
 cat ~/.ssh/known_hosts
 
 echo "[i] Changing directory"
