@@ -1,6 +1,8 @@
+echo "-------------------------"
 echo "[i] Changing directory"
 cd sources/
 
+echo "-------------------------"
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
 git pull origin "$BRANCH_NAME"
 git branch -a
@@ -10,8 +12,6 @@ then
 	echo "[-] Error during comparing the branches"
 	exit 1
 fi
-echo "EZL"
-cat ~/.ssh/known_hosts
 NB_DIFF=$(echo "$GIT_DIFF" | awk NF | wc -l)
 if [ "$NB_DIFF" == "0" ]
 then
@@ -23,6 +23,7 @@ else
 	echo "[i] Changes detected to merge"
 fi
 
+echo "-------------------------"
 echo "[i] Creating a pull request"
 PR_URL=$(gh pr create -B "$BASE_BRANCH_NAME" -H "$BRANCH_NAME" --title "$TITLE" --body "$BODY")
 if [ "$?" != "0" ]
@@ -37,6 +38,7 @@ then
 	exit 1
 fi
 
+echo "-------------------------"
 echo "[i] Exporting the pull request information"
 PR_NUMBER=${PR_URL##*/}
 echo "pr_url=$PR_URL" | tee -a $GITHUB_OUTPUT

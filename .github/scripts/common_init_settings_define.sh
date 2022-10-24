@@ -1,3 +1,4 @@
+echo "-------------------------"
 echo "[i] Defining the workflow"
 echo WORKFLOW_NAME=$WORKFLOW_NAME
 

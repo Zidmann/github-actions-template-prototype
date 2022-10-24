@@ -1,5 +1,6 @@
 PULL_REQUEST_OPENED=0
 
+echo "-------------------------"
 if [[ "$PR_URL" == "" ]] && [[ "$PR_NUMBER" == "" ]]
 then
 	echo "[i] No changes in the code, deployment are allowed"
