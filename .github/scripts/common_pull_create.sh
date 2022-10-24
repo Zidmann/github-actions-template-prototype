@@ -1,6 +1,3 @@
-echo "EZL"
-cat ~/.ssh/known_hosts
-
 echo "[i] Changing directory"
 cd sources/
 
@@ -13,6 +10,8 @@ then
 	echo "[-] Error during comparing the branches"
 	exit 1
 fi
+echo "EZL"
+cat ~/.ssh/known_hosts
 NB_DIFF=$(echo "$GIT_DIFF" | awk NF | wc -l)
 if [ "$NB_DIFF" == "0" ]
 then
