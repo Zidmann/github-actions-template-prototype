@@ -51,12 +51,6 @@ jobs:
         with:
           path: sources/
           submodules: true
-      - name: Mapping variables
-        id: mapping
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_variables_mapping.sh
       - name: Define settings
         id: settings
         env:
