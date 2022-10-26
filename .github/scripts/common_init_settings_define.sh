@@ -73,7 +73,13 @@ echo "dir_list_prod=$DIRECTORY_LIST_PROD" | tee -a $GITHUB_OUTPUT
 echo "-------------------------"
 echo "[i] Defining the state storing and authenticating information"
 echo "state_gcp_bucket=$STATE_GCP_BUCKET" | tee -a $GITHUB_OUTPUT
-echo "workloadidentity_projectnumber=$WORKLOADIDENTITY_PROJECTNUMBER" | tee -a $GITHUB_OUTPUT
+if [ "$WORKLOADIDENTITY_PROJECTNUMBER" != "" ]
+then
+	WORKLOADIDENTITY_PROVIDER_TEST=projects/$WORKLOADIDENTITY_PROJECTNUMBER/locations/global/workloadIdentityPools/$WORKLOADIDENTITY_PROVIDER_TEST
+	WORKLOADIDENTITY_PROVIDER_PROD=projects/$WORKLOADIDENTITY_PROJECTNUMBER/locations/global/workloadIdentityPools/$WORKLOADIDENTITY_PROVIDER_PROD
+	echo "workloadidentity_provider_test=$WORKLOADIDENTITY_PROVIDER_TEST" | tee -a $GITHUB_OUTPUT
+	echo "workloadidentity_provider_prod=$WORKLOADIDENTITY_PROVIDER_PROD" | tee -a $GITHUB_OUTPUT
+fi
 echo "workloadidentity_provider_test=$WORKLOADIDENTITY_PROVIDER_TEST" | tee -a $GITHUB_OUTPUT
 echo "workloadidentity_provider_prod=$WORKLOADIDENTITY_PROVIDER_PROD" | tee -a $GITHUB_OUTPUT
 if [ "$WORKLOADIDENTITY_PROVIDER_TEST" != "" ]

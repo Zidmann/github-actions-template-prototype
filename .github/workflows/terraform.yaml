@@ -57,6 +57,7 @@ jobs:
           GITHUB_REF: ${{ github.ref }} 
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
+          WORKLOADIDENTITY_PROJECTNUMBER: ${{ secret.WORKLOADIDENTITY_PROJECTNUMBER }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_define.sh
       - name: Cache
@@ -245,14 +246,13 @@ jobs:
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          WORKLOADIDENTITY_PROJECTNUMBER: ${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}
           TOKEN_FORMAT:  ${{ needs.init.outputs.token_format_test }}
           ACCESS_TOKEN_LIFETIME:  ${{ needs.init.outputs.access_token_lifetime }}
           WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_test }}
         uses: google-github-actions/auth@v0
         with:
           token_format: ${{ env.TOKEN_FORMAT }}
-          workload_identity_provider: projects/${{ env.WORKLOADIDENTITY_PROJECTNUMBER }}/locations/global/workloadIdentityPools/${{ env.WORKLOADIDENTITY_PROVIDER }}
+          workload_identity_provider: ${{ env.WORKLOADIDENTITY_PROVIDER }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
           access_token_lifetime: ${{ env.ACCESS_TOKEN_LIFETIME }}
           credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
@@ -284,10 +284,6 @@ jobs:
       - name: Clean environment
         id: clean
         env:
-          IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
-          IDENTITY_FEDERATION_POOL: ${{ secrets.identity_federation_pool }}
-          IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
-          GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         if: always()
         run: |
