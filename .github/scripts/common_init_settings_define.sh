@@ -78,3 +78,13 @@ echo "workloadidentity_provider_test=$WORKLOADIDENTITY_PROVIDER_TEST" | tee -a $
 echo "workloadidentity_provider_prod=$WORKLOADIDENTITY_PROVIDER_PROD" | tee -a $GITHUB_OUTPUT
 echo "serviceaccount_test=$SERVICEACCOUNT_TEST" | tee -a $GITHUB_OUTPUT
 echo "serviceaccount_prod=$SERVICEACCOUNT_PROD" | tee -a $GITHUB_OUTPUT
+if [ "$WORKLOADIDENTITY_PROVIDER_TEST" != "" ]
+then
+	echo "token_format_test=access_token" | tee -a $GITHUB_OUTPUT
+	echo "access_token_lifetime=900s" | tee -a $GITHUB_OUTPUT
+fi
+if [ "$WORKLOADIDENTITY_PROVIDER_PROD" != "" ]
+then
+	echo "token_format_prod=access_token" | tee -a $GITHUB_OUTPUT
+	echo "access_token_lifetime=900s" | tee -a $GITHUB_OUTPUT
+fi
