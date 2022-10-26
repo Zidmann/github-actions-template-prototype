@@ -33,11 +33,8 @@ jobs:
       cache_key: ${{ steps.settings.outputs.cache_key }}
 
       state_gcp_bucket: ${{ steps.settings.outputs.state_gcp_bucket }}
-      workloadidentity_projectnumber: ${{ steps.settings.outputs.workloadidentity_projectnumber }}
       workloadidentity_provider_test: ${{ steps.settings.outputs.workloadidentity_provider_test }}
       workloadidentity_provider_prod: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
-      serviceaccount_test: ${{ steps.settings.outputs.serviceaccount_test }}
-      serviceaccount_prod: ${{ steps.settings.outputs.serviceaccount_prod }}
       token_format_test: ${{ steps.settings.outputs.token_format_test }}
       token_format_prod: ${{ steps.settings.outputs.token_format_prod }}
       access_token_lifetime: ${{ steps.settings.outputs.access_token_lifetime }}
@@ -246,18 +243,19 @@ jobs:
       - name: Authenticate Google
         id: auth
         env:
+          SERVICE_ACCOUNT: ${{ secrets.SERVICEACCOUNT_TEST }}
+          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+          WORKLOADIDENTITY_PROJECTNUMBER: ${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}
           TOKEN_FORMAT:  ${{ needs.init.outputs.token_format_test }}
-          WORKLOADIDENTITY_PROJECTNUMBER: ${{ needs.init.outputs.workloadidentity_projectnumber }}
-          WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_test }}
-          SERVICEACCOUNT: ${{ needs.init.outputs.serviceaccount_test }}
           ACCESS_TOKEN_LIFETIME:  ${{ needs.init.outputs.access_token_lifetime }}
+          WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_test }}
         uses: google-github-actions/auth@v0
         with:
           token_format: ${{ env.TOKEN_FORMAT }}
           workload_identity_provider: projects/${{ env.WORKLOADIDENTITY_PROJECTNUMBER }}/locations/global/workloadIdentityPools/${{ env.WORKLOADIDENTITY_PROVIDER }}
-          service_account: ${{ env.SERVICEACCOUNT }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
           access_token_lifetime: ${{ env.ACCESS_TOKEN_LIFETIME }}
-          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
       - name: Cache
         id: cache
         env:
@@ -277,14 +275,12 @@ jobs:
       - name: Deploy on test
         id: deploy
         env:
-          IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
-          IDENTITY_FEDERATION_POOL: ${{ secrets.identity_federation_pool }}
-          IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
-          GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
+          STATE_GCP_BUCKET: ${{ needs.init.outputs.state_gcp_bucket }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          WORKING_DIRECTORY: ${{ matrix.directory }}
         run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
+          echo ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
       - name: Clean environment
         id: clean
         env:
@@ -295,67 +291,4 @@ jobs:
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
         if: always()
         run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_clean.sh
-
-  deploy-production:
-    name: Deploy on production
-    needs: [init, test-stagging]
-    runs-on: ubuntu-latest
-    if: ${{ (needs.init.outputs.execute_deploy == '1') && (needs.dev-pull-diff.outputs.pull_request_opened == '0') }}
-    environment: production
-    strategy:
-      fail-fast: false
-      max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
-      matrix:
-        directory: ${{ fromJson(needs.init.outputs.dir_list_prod) }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: sources/${{ matrix.directory }}
-    env:
-      GITHUB_WORKSPACE: ${{ github.workspace }}
-    steps:
-      - name: Setup Terraform
-        id: setup
-        uses: hashicorp/setup-terraform@v2
-      - name: Set up Cloud SDK
-        id: gcloud
-        uses: google-github-actions/setup-gcloud@v0
-      - name: Authenticate Google
-        id: auth
-        env:
-          WORKLOADIDENTITY_PROJECTNUMBER: ${{ needs.init.outputs.workloadidentity_projectnumber }}
-          WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_prod }}
-          SERVICEACCOUNT: ${{ needs.init.outputs.serviceaccount_prod }}
-        uses: google-github-actions/auth@v0
-        with:
-          token_format: "access_token"
-          workload_identity_provider: projects/${{ env.WORKLOADIDENTITY_PROJECTNUMBER }}/locations/global/workloadIdentityPools/${{ env.WORKLOADIDENTITY_PROVIDER }}
-          service_account: ${{ env.SERVICEACCOUNT }}
-      - name: Cache
-        id: cache
-        env:
-          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
-        uses: actions/cache@v3
-        with:
-          path: sources/
-          key: ${{ env.CACHE_KEY }}
-      - name: Configure SSH
-        id: ssh
-        if: env.SSH_PRIVATE_KEY
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
-      - name: Deploy on production
-        id: deploy
-        env:
-          IDENTITY_FEDERATION_PROJECT_NUMBER: ${{ secrets.identity_federation_project_number }}
-          IDENTITY_FEDERATION_POOL: ${{ secrets.identity_federation_pool }}
-          IDENTITY_FEDERATION_PROVIDER: ${{ secrets.identity_federation_provider }}
-          GCP_BUCKET_REPOSITORY: ${{ secrets.gcp_bucket_repository }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_check_secrets.sh
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
+          echo ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_clean.sh

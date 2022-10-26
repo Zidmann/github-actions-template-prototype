@@ -76,8 +76,6 @@ echo "state_gcp_bucket=$STATE_GCP_BUCKET" | tee -a $GITHUB_OUTPUT
 echo "workloadidentity_projectnumber=$WORKLOADIDENTITY_PROJECTNUMBER" | tee -a $GITHUB_OUTPUT
 echo "workloadidentity_provider_test=$WORKLOADIDENTITY_PROVIDER_TEST" | tee -a $GITHUB_OUTPUT
 echo "workloadidentity_provider_prod=$WORKLOADIDENTITY_PROVIDER_PROD" | tee -a $GITHUB_OUTPUT
-echo "serviceaccount_test=$SERVICEACCOUNT_TEST" | tee -a $GITHUB_OUTPUT
-echo "serviceaccount_prod=$SERVICEACCOUNT_PROD" | tee -a $GITHUB_OUTPUT
 if [ "$WORKLOADIDENTITY_PROVIDER_TEST" != "" ]
 then
 	echo "token_format_test=access_token" | tee -a $GITHUB_OUTPUT
