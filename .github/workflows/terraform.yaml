@@ -57,7 +57,7 @@ jobs:
           GITHUB_REF: ${{ github.ref }} 
           GITHUB_SHA: ${{ github.sha }}
           WORKFLOW_NAME: "terraform"
-          WORKLOADIDENTITY_PROJECTNUMBER: ${{ secret.WORKLOADIDENTITY_PROJECTNUMBER }}
+          WORKLOADIDENTITY_PROJECTNUMBER: ${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_define.sh
       - name: Cache
