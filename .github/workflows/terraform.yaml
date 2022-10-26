@@ -271,6 +271,8 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
+          pwd
+          ls
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
       - name: Deploy on test
         id: deploy
