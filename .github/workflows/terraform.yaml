@@ -243,7 +243,7 @@ jobs:
       - name: Authenticate Google
         id: auth
         env:
-          SERVICE_ACCOUNT: ${{ secrets.SERVICEACCOUNT_TEST }}
+          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
           WORKLOADIDENTITY_PROJECTNUMBER: ${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}
           TOKEN_FORMAT:  ${{ needs.init.outputs.token_format_test }}
