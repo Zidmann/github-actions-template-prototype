@@ -8,4 +8,4 @@ terraform plan -no-color
 
 echo "-------------------------"
 echo "[i] Applying the Terraform changes"
-terraform apply -auto-approve -var "suffix_name=$SUFFIX_NAME" $EXTRA_TERRAFORM_VARS_CMD
+terraform apply -auto-approve -var "project_id=$PROJECT_ID" -var "suffix_name=$SUFFIX_NAME"

@@ -290,6 +290,7 @@ jobs:
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           WORKING_DIRECTORY: ${{ matrix.directory }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
       - name: Clean environment

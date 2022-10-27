@@ -1,3 +1,3 @@
 echo "-------------------------"
 echo "[i] Removing the Terraform project components"
-terraform destroy -var "suffix_name=$SUFFIX_NAME" $EXTRA_TERRAFORM_VARS_CMD
+terraform destroy -var "project_id=$PROJECT_ID" -var "suffix_name=$SUFFIX_NAME"
