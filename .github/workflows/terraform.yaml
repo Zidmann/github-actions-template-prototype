@@ -288,6 +288,7 @@ jobs:
         env:
           STATE_GCP_BUCKET: ${{ needs.init.outputs.state_gcp_bucket }}
           SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
+          GITHUB_SHA7: ${{ needs.init.outputs.sha7 }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           WORKING_DIRECTORY: ${{ matrix.directory }}
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
