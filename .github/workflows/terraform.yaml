@@ -268,11 +268,11 @@ jobs:
         id: hide
         env:
           PROJECT_PREFIX: ${{ secrets.PROJECT_PREFIX }}
-          CLOUDSDK_CORE_PROJECT: $${{ env.CLOUDSDK_CORE_PROJECT }}
-          CLOUDSDK_PROJECT: $${{ env.CLOUDSDK_PROJECT }}
-          GCLOUD_PROJECT: $${{ env.GCLOUD_PROJECT }}
-          GCP_PROJECT: $${{ env.GCP_PROJECT }}
-          GOOGLE_CLOUD_PROJECT: $${{ env.GOOGLE_CLOUD_PROJECT }}
+          CLOUDSDK_CORE_PROJECT: ${{ env.CLOUDSDK_CORE_PROJECT }}
+          CLOUDSDK_PROJECT: ${{ env.CLOUDSDK_PROJECT }}
+          GCLOUD_PROJECT: ${{ env.GCLOUD_PROJECT }}
+          GCP_PROJECT: ${{ env.GCP_PROJECT }}
+          GOOGLE_CLOUD_PROJECT: ${{ env.GOOGLE_CLOUD_PROJECT }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_hide_secrets.sh
       - name: Configure SSH
