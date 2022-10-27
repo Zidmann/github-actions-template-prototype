@@ -255,7 +255,8 @@ jobs:
           workload_identity_provider: ${{ env.WORKLOADIDENTITY_PROVIDER }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
           access_token_lifetime: ${{ env.ACCESS_TOKEN_LIFETIME }}
-          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}      - name: Cache
+          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
+      - name: Cache
         id: cache
         env:
           CACHE_KEY: ${{ needs.init.outputs.cache_key }}
