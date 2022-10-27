@@ -255,7 +255,14 @@ jobs:
           workload_identity_provider: ${{ env.WORKLOADIDENTITY_PROVIDER }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
           access_token_lifetime: ${{ env.ACCESS_TOKEN_LIFETIME }}
-          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
+          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}      - name: Cache
+        id: cache
+        env:
+          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ env.CACHE_KEY }}
       - name: Hide information
         id: hide
         env:
@@ -267,14 +274,6 @@ jobs:
           GOOGLE_CLOUD_PROJECT: $${{ env.GOOGLE_CLOUD_PROJECT }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_hide_secrets.sh
-      - name: Cache
-        id: cache
-        env:
-          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
-        uses: actions/cache@v3
-        with:
-          path: sources/
-          key: ${{ env.CACHE_KEY }}
       - name: Configure SSH
         id: ssh
         if: env.SSH_PRIVATE_KEY
