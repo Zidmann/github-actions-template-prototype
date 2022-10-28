@@ -1,5 +1,6 @@
 
 locals {
-  pubsub_name  = "pubsub-test-${var.component_name_suffix}"
-  storage_name = "${var.project_id}-github-${var.component_name_suffix}"
+  suffix       = "${var.component_name_suffix}" == "" ? "" : "-${var.component_name_suffix}"
+  pubsub_name  = "pubsub-test${local.suffix}"
+  storage_name = "${var.project_id}-github${local.suffix}"
 }
