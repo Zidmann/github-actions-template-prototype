@@ -40,7 +40,7 @@ jobs:
       access_token_lifetime: ${{ steps.init.outputs.access_token_lifetime }}
     steps:
       - name: init
-        uses: Zidmann/github-actions-template-prototype/ga-init@master
+        uses: Zidmann/github-actions-template-prototype/ga-init@main
         with:
           env_path: "sources/.github/params/terraform.env"
 
