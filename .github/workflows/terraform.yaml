@@ -39,12 +39,24 @@ jobs:
       token_format_prod: ${{ steps.init.outputs.token_format_prod }}
       access_token_lifetime: ${{ steps.init.outputs.access_token_lifetime }}
     steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          path: "${{ github.workspace }}/sources/"
+          submodules: true
       - name: Init
         id: init
         uses: Zidmann/github-actions-template-prototype/ga-init@main
         with:
           env_path: "sources/.github/params/terraform.env"
           workloadidentity_projectnumber: "${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}"
+      - name: Cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: "${{ github.workspace }}/sources/"
+          key: "${{ steps.init.outputs.cache_key }}"
 
   dev-check:
     name: Check directories
