@@ -64,9 +64,6 @@ outputs:
 
 runs:
   using: "composite"
-  defaults:
-    run:
-      shell: bash
   steps:
     - name: Checkout
       id: checkout
@@ -83,7 +80,8 @@ runs:
         WORKLOADIDENTITY_PROJECTNUMBER: "${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}"
         ENV_PATH: "${{ inputs.env_path }}"
       run: |
-        "${{ github.action_path }}/common_init_settings_define.sh"
+        "${{ github.action_path }}/common_init_settings_define.sh"       
+      shell: bash
     - name: Cache
       id: cache
       uses: actions/cache@v3
