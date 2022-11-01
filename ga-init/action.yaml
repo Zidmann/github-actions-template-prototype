@@ -2,8 +2,10 @@ name: 'Initialization'
 description: 'Action designed to prepare the workflow for the next jobs'
 
 inputs:
-  env_path:  # id of input
+  env_path:
     description: 'The path of the environment file'
+  workloadidentity_projectnumber:
+    description: 'The GCP project ID which will manage the authentication'
 outputs:
   threads: 
     description: ""
@@ -77,7 +79,7 @@ runs:
         GITHUB_REF: "${{ github.ref }}"
         GITHUB_SHA: "${{ github.sha }}"
         WORKFLOW_NAME: "terraform"
-        WORKLOADIDENTITY_PROJECTNUMBER: "${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}"
+        WORKLOADIDENTITY_PROJECTNUMBER: "${{ inputs.workloadidentity_projectnumber }}"
         ENV_PATH: "${{ inputs.env_path }}"
       run: |
         "${{ github.action_path }}/common_init_settings_define.sh"       

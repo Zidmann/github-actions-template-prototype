@@ -43,6 +43,7 @@ jobs:
         uses: Zidmann/github-actions-template-prototype/ga-init@main
         with:
           env_path: "sources/.github/params/terraform.env"
+          workloadidentity_projectnumber: "${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}"
 
   dev-check:
     name: Check directories
