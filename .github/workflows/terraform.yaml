@@ -17,55 +17,32 @@ jobs:
     name: Initialization
     runs-on: ubuntu-latest
     outputs:
-      threads: ${{ steps.settings.outputs.threads }}
+      threads: ${{ steps.init.outputs.threads }}
 
-      dir_list_dev: ${{ steps.settings.outputs.dir_list_dev }}
-      dir_list_test: ${{ steps.settings.outputs.dir_list_test }}
-      dir_list_prod: ${{ steps.settings.outputs.dir_list_prod }}
+      dir_list_dev: ${{ steps.init.outputs.dir_list_dev }}
+      dir_list_test: ${{ steps.init.outputs.dir_list_test }}
+      dir_list_prod: ${{ steps.init.outputs.dir_list_prod }}
 
-      execute_check_and_format: ${{ steps.settings.outputs.execute_check_and_format }}
-      execute_test: ${{ steps.settings.outputs.execute_test }}
-      execute_deploy: ${{ steps.settings.outputs.execute_deploy }}
+      execute_check_and_format: ${{ steps.init.outputs.execute_check_and_format }}
+      execute_test: ${{ steps.init.outputs.execute_test }}
+      execute_deploy: ${{ steps.init.outputs.execute_deploy }}
 
-      sha7: ${{ steps.settings.outputs.sha7 }}
-      git_branch: ${{ steps.settings.outputs.git_branch }}
-      tmp_git_branch: ${{ steps.settings.outputs.tmp_git_branch }}
-      cache_key: ${{ steps.settings.outputs.cache_key }}
+      sha7: ${{ steps.init.outputs.sha7 }}
+      git_branch: ${{ steps.init.outputs.git_branch }}
+      tmp_git_branch: ${{ steps.init.outputs.tmp_git_branch }}
+      cache_key: ${{ steps.init.outputs.cache_key }}
 
-      state_gcp_bucket: ${{ steps.settings.outputs.state_gcp_bucket }}
-      workloadidentity_provider_test: ${{ steps.settings.outputs.workloadidentity_provider_test }}
-      workloadidentity_provider_prod: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
-      token_format_test: ${{ steps.settings.outputs.token_format_test }}
-      token_format_prod: ${{ steps.settings.outputs.token_format_prod }}
-      access_token_lifetime: ${{ steps.settings.outputs.access_token_lifetime }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: .
-    env:
-      GITHUB_WORKSPACE: ${{ github.workspace }}
+      state_gcp_bucket: ${{ steps.init.outputs.state_gcp_bucket }}
+      workloadidentity_provider_test: ${{ steps.init.outputs.workloadidentity_provider_test }}
+      workloadidentity_provider_prod: ${{ steps.init.outputs.workloadidentity_provider_prod }}
+      token_format_test: ${{ steps.init.outputs.token_format_test }}
+      token_format_prod: ${{ steps.init.outputs.token_format_prod }}
+      access_token_lifetime: ${{ steps.init.outputs.access_token_lifetime }}
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v3
+      - name: init
+        uses: Zidmann/github-actions-template-prototype/ga-init@master
         with:
-          path: sources/
-          submodules: true
-      - name: Define settings
-        id: settings
-        env:
-          GITHUB_REF: ${{ github.ref }} 
-          GITHUB_SHA: ${{ github.sha }}
-          WORKFLOW_NAME: "terraform"
-          WORKLOADIDENTITY_PROJECTNUMBER: ${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_settings_define.sh
-      - name: Cache
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: sources/
-          key: ${{ steps.settings.outputs.cache_key }}
+          env_path: "sources/.github/params/terraform.env"
 
   dev-check:
     name: Check directories

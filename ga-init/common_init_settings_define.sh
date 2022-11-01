@@ -39,13 +39,22 @@ then
 	echo "execute_test=0" | tee -a $GITHUB_OUTPUT
 	echo "execute_deploy=0" | tee -a $GITHUB_OUTPUT
 else
-	echo "[-] Error unaccepted branch name"
+	echo "[-] Error : unaccepted branch name"
 	exit 1
 fi
 
 echo "-------------------------"
 echo "[i] Loading the parameters file"
-source "sources/.github/params/$WORKFLOW_NAME.env"
+if [ "$ENV_PATH" == "" ]
+then
+	echo "[i] No environment file defined"
+elif [ -f "$ENV_PATH" ]
+	source "$ENV_PATH"
+else
+	echo "[-] Error : configuration file was not found"
+	exit 1
+fi
+
 if [ "$THREADS" == "" ]
 then
 	THREADS="8"
@@ -70,9 +79,15 @@ echo "dir_list_dev=$DIRECTORY_LIST_DEV" | tee -a $GITHUB_OUTPUT
 echo "dir_list_test=$DIRECTORY_LIST_TEST" | tee -a $GITHUB_OUTPUT
 echo "dir_list_prod=$DIRECTORY_LIST_PROD" | tee -a $GITHUB_OUTPUT
 
+if [ "$WORKFLOW_NAME" == "terraform" ]
+then
+	echo "-------------------------"
+	echo "[i] Defining the state storing and authenticating information"
+	echo "state_gcp_bucket=$STATE_GCP_BUCKET" | tee -a $GITHUB_OUTPUT
+fi
+
 echo "-------------------------"
-echo "[i] Defining the state storing and authenticating information"
-echo "state_gcp_bucket=$STATE_GCP_BUCKET" | tee -a $GITHUB_OUTPUT
+echo "[i] Defining the authentication information"
 if [ "$WORKLOADIDENTITY_PROJECTNUMBER" != "" ]
 then
 	WORKLOADIDENTITY_PROVIDER_TEST=projects/$WORKLOADIDENTITY_PROJECTNUMBER/locations/global/workloadIdentityPools/$WORKLOADIDENTITY_PROVIDER_TEST

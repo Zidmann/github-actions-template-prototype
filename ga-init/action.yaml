@@ -1,0 +1,92 @@
+name: 'Initialization'
+description: 'Action designed to prepare the workflow for the next jobs'
+
+inputs:
+  env_path:  # id of input
+    description: 'The path of the environment file'
+outputs:
+  threads: 
+    description: ""
+    value: ${{ steps.settings.outputs.threads }}
+
+  dir_list_dev: 
+    description: ""
+    value: ${{ steps.settings.outputs.dir_list_dev }}
+  dir_list_test: 
+    description: ""
+    value: ${{ steps.settings.outputs.dir_list_test }}
+  dir_list_prod: 
+    description: ""
+    value: ${{ steps.settings.outputs.dir_list_prod }}
+
+  execute_check_and_format: 
+    description: ""
+    value: ${{ steps.settings.outputs.execute_check_and_format }}
+  execute_test: 
+    description: ""
+    value: ${{ steps.settings.outputs.execute_test }}
+  execute_deploy: 
+    description: ""
+    value: ${{ steps.settings.outputs.execute_deploy }}
+
+  sha7: 
+    description: ""
+    value: ${{ steps.settings.outputs.sha7 }}
+  git_branch: 
+    description: ""
+    value: ${{ steps.settings.outputs.git_branch }}
+  tmp_git_branch: 
+    description: ""
+    value: ${{ steps.settings.outputs.tmp_git_branch }}
+  cache_key: 
+    description: ""
+    value: ${{ steps.settings.outputs.cache_key }}
+
+  state_gcp_bucket: 
+    description: ""
+    value: ${{ steps.settings.outputs.state_gcp_bucket }}
+
+  workloadidentity_provider_test: 
+    description: ""
+    value: ${{ steps.settings.outputs.workloadidentity_provider_test }}
+  workloadidentity_provider_prod: 
+    description: ""
+    value: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
+  token_format_test: 
+    description: ""
+    value: ${{ steps.settings.outputs.token_format_test }}
+  token_format_prod: 
+    description: ""
+    value: ${{ steps.settings.outputs.token_format_prod }}
+  access_token_lifetime: 
+    description: ""
+    value: ${{ steps.settings.outputs.access_token_lifetime }}
+
+runs:
+  using: "composite"
+  defaults:
+    run:
+      shell: bash
+  steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v3
+      with:
+        path: "${{ github.workspace }}/sources/"
+        submodules: true
+    - name: Define settings
+      id: settings
+      env:
+        GITHUB_REF: "${{ github.ref }}"
+        GITHUB_SHA: "${{ github.sha }}"
+        WORKFLOW_NAME: "terraform"
+        WORKLOADIDENTITY_PROJECTNUMBER: "${{ secrets.WORKLOADIDENTITY_PROJECTNUMBER }}"
+        ENV_PATH: "${{ inputs.env_path }}"
+      run: |
+        "${{ github.action_path }}/common_init_settings_define.sh"
+    - name: Cache
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: "${{ github.workspace }}/sources/"
+        key: "${{ steps.settings.outputs.cache_key }}"
