@@ -43,7 +43,7 @@ jobs:
         id: checkout
         uses: actions/checkout@v3
         with:
-          path: "${{ github.workspace }}/sources/"
+          path: "sources/"
           submodules: true
       - name: Init
         id: init
@@ -55,7 +55,7 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: "${{ github.workspace }}/sources/"
+          path: "sources/"
           key: "${{ steps.init.outputs.cache_key }}"
 
   dev-check:
