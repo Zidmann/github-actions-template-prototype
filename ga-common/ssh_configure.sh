@@ -1,3 +1,5 @@
+set -e
+
 echo "-------------------------"
 echo "[i] Creating SSH directory"
 SSH_DIR="$HOME/.ssh"

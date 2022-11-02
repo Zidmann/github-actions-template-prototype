@@ -1,3 +1,5 @@
+set -e
+
 echo "-------------------------"
 WORKING_DIR=$*
 echo "[i] Moving to the Terraform directory ($WORKING_DIR)"
