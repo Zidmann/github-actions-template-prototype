@@ -49,8 +49,10 @@ then
 	echo -e "\n[i] Changes to commit"
 	git status --porcelain 2>/dev/null
 
+	set +e
 	echo -e "\n[i] Commiting the changes"
 	git commit -a -m "Change in $WORKING_DIRECTORY directory"
+	set -e
 	
 	while true
 	do
