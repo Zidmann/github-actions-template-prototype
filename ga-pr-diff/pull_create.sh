@@ -6,7 +6,9 @@ cd sources/ || exit
 
 echo "-------------------------"
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
-git pull origin "$BRANCH_NAME"
+set +e
+git pull origin "$BRANCH_NAME" 2>/dev/null
+set -e
 git branch -a
 GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/origin/$BRANCH_NAME")
 if [ "$?" != "0" ]
