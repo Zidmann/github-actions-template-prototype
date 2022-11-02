@@ -1,5 +1,5 @@
 module "pubsub" {
-  source = "git@github.com:Zidmann/github-actions-template-prototype.git//module/google-pubsub-topic"
+  source = "git@github.com:Zidmann/github-actions-template-prototype.git//examples/tf/module/google-pubsub-topic"
 
   name    = local.pubsub_name
   labels  = {}
