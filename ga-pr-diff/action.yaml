@@ -1,5 +1,5 @@
-name: "Check directories"
-description: "Action designed to format the Terraform code"
+name: "Pull request differences"
+description: "Action designed to open a pull request if the code changed"
 
 inputs:
   github_token:
