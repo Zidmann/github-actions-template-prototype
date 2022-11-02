@@ -1,11 +1,11 @@
-name: 'Initialization'
-description: 'Action designed to prepare the workflow for the next jobs'
+name: "Initialization"
+description: "Action designed to prepare the workflow for the next jobs"
 
 inputs:
   env_path:
-    description: 'The path of the environment file'
+    description: "The path of the environment file"
   workloadidentity_projectnumber:
-    description: 'The GCP project ID which will manage the authentication'
+    description: "The GCP project ID which will manage the authentication"
 outputs:
   threads: 
     description: ""
@@ -76,5 +76,5 @@ runs:
         WORKLOADIDENTITY_PROJECTNUMBER: "${{ inputs.workloadidentity_projectnumber }}"
         ENV_PATH: "${{ inputs.env_path }}"
       run: |
-        "${{ github.action_path }}/common_init_settings_define.sh"       
+        "${{ github.action_path }}/define_params.sh"       
       shell: bash

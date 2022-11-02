@@ -1,0 +1,26 @@
+name: "Check directories"
+description: "Action designed to check the Terraform code"
+
+inputs:
+  ssh_private_key:
+    description: "The SSH private key"
+  working_directory:
+    description: "The path of the Terraform code"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure SSH
+      id: ssh
+      if: env.SSH_PRIVATE_KEY
+      env:
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        SSH_PRIVATE_KEY: "${{ inputs.ssh_private_key }}"
+      run: |
+        "${{ github.action_path }}/../ga-init/common_ssh_configure.sh"
+      shell: bash
+    - name: Terraform check code
+      id: check
+      run: |
+        "${{ github.action_path }}/terraform_check.sh" "${{ inputs.working_directory }}"
+      shell: bash

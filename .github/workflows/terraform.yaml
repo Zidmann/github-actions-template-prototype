@@ -85,18 +85,12 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Configure SSH
-        id: ssh
-        if: env.SSH_PRIVATE_KEY
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
       - name: Terraform check code
         id: check
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_check.sh
+        uses: Zidmann/github-actions-template-prototype/ga-tf-check@main
+        with:
+          ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
+          working_directory: "sources/${{ matrix.directory }}"
 
   dev-fmt:
     name: Format directories
