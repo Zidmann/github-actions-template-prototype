@@ -1,5 +1,5 @@
 module "bucket" {
-  source = "git@github.com:Zidmann/github-actions-template-prototype.git//module/google-storage"
+  source = "git@github.com:Zidmann/github-actions-template-prototype.git//examples/tf/module/google-storage"
 
   name          = local.storage_name
   location      = "EU"
@@ -9,7 +9,7 @@ module "bucket" {
 }
 
 module "notification" {
-  source = "git@github.com:Zidmann/github-actions-template-prototype.git//module/google-storage-notification"
+  source = "git@github.com:Zidmann/github-actions-template-prototype.git//examples/tf/module/google-storage-notification"
 
   bucket_list = [local.storage_name]
   topic_id    = module.pubsub.id
