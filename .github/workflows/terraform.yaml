@@ -87,6 +87,8 @@ jobs:
           key: ${{ env.CACHE_KEY }}
       - name: Terraform check code
         id: check
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         uses: Zidmann/github-actions-template-prototype/ga-tf-check@main
         with:
           ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
