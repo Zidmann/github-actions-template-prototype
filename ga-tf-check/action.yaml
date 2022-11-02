@@ -17,7 +17,7 @@ runs:
         GITHUB_REPOSITORY: ${{ github.repository }}
         SSH_PRIVATE_KEY: "${{ inputs.ssh_private_key }}"
       run: |
-        "${{ github.action_path }}/../ga-init/ssh_configure.sh"
+        "${{ github.action_path }}/../ga-common/ssh_configure.sh"
       shell: bash
     - name: Terraform check code
       id: check
