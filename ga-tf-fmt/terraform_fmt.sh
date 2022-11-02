@@ -1,3 +1,11 @@
+set -e
+
+echo "-------------------------"
+WORKING_DIR="$*"
+echo "[i] Moving to the Terraform directory ($WORKING_DIR)"
+cd "$WORKING_DIR"
+
+echo "-------------------------"
 if [ -f "backend.tf" ]
 then
 	echo "-------------------------"

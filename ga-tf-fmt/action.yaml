@@ -34,5 +34,5 @@ runs:
         BRANCH_NAME: "${{ inputs.branch_name }}"
         WORKING_DIRECTORY: "${{ inputs.working_directory }}"
       run: |
-        "${{ github.action_path }}/terraform_fmt.sh"
+        "${{ github.action_path }}/terraform_fmt.sh" "${{ inputs.working_directory }}"
       shell: bash
