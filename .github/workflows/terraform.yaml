@@ -124,7 +124,7 @@ jobs:
         id: check
         env:
           SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
-        uses: Zidmann/github-actions-template-prototype/ga-tf-check@main
+        uses: Zidmann/github-actions-template-prototype/ga-tf-fmt@main
         with:
           branch_name: "${{ needs.init.outputs.tmp_git_branch }}"
           ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
