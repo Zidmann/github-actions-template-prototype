@@ -1,6 +1,8 @@
+set -e
+
 echo "-------------------------"
 echo "[i] Changing directory"
-cd sources/
+cd sources/ || exit
 
 echo "-------------------------"
 echo "[i] Comparing the $BASE_BRANCH_NAME and $BRANCH_NAME branches"
@@ -41,5 +43,5 @@ fi
 echo "-------------------------"
 echo "[i] Exporting the pull request information"
 PR_NUMBER=${PR_URL##*/}
-echo "pr_url=$PR_URL" | tee -a $GITHUB_OUTPUT
-echo "pr_number=$PR_NUMBER" | tee -a $GITHUB_OUTPUT
+echo "pr_url=$PR_URL" | tee -a "$GITHUB_OUTPUT"
+echo "pr_number=$PR_NUMBER" | tee -a "$GITHUB_OUTPUT"

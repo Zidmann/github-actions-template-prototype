@@ -1,0 +1,61 @@
+name: "Check directories"
+description: "Action designed to format the Terraform code"
+
+inputs:
+  github_token:
+    description: "The Github token to create the pull request"
+  base_branch_name:
+    description: "The branch where to push the final code"
+  branch_name:
+    description: "The branch where to push the new code"
+  title:
+    description: "The title of the pull request"
+  body:
+    description: "The body of the pull request"
+  ssh_private_key:
+    description: "The SSH private key"
+  working_directory:
+    description: "The path of the Terraform code"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure SSH
+      id: ssh
+      if: env.SSH_PRIVATE_KEY
+      env:
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+        SSH_PRIVATE_KEY: "${{ inputs.ssh_private_key }}"
+      run: |
+        "${{ github.action_path }}/../ga-common/ssh_configure.sh"
+      shell: bash
+    - name: Prepare pull
+      id: pull
+      env:
+        BRANCH_NAME: "${{ inputs.branch_name }}"
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+      run: |
+        "${{ github.action_path }}/pull_prepare.sh"
+      shell: bash
+    - name: Create pull request
+      id: create-pr
+      env:
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+        GH_TOKEN: "${{ github.github_token }}"
+        BASE_BRANCH_NAME: "${{ inputs.base_branch_name }}"
+        BRANCH_NAME: "${{ inputs.branch_name }}"
+        TITLE: "${{ inputs.title }}"
+        BODY: "${{ inputs.body }}"
+      run: |
+        "${{ github.action_path }}/pull_create.sh"
+      shell: bash
+    - name: Close pull
+      id: pull-code
+      env:
+        BRANCH_NAME: "${{ needs.init.outputs.tmp_git_branch }}"
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+        PR_URL: "${{ steps.create-pr.outputs.pr_url }}"
+        PR_NUMBER: "${{ steps.create-pr.outputs.pr_number }}"
+      run: |
+        "${{ github.action_path }}/pull_close.sh"
+      shell: bash

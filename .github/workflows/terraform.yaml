@@ -120,8 +120,8 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Terraform check code
-        id: check
+      - name: Terraform format code
+        id: format
         env:
           SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
         uses: Zidmann/github-actions-template-prototype/ga-tf-fmt@main
@@ -156,41 +156,20 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Configure SSH
-        id: ssh
-        if: env.SSH_PRIVATE_KEY
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
-      - name: Prepare pull
+      - name: Pull the differences
         id: pull
         env:
-          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_prepare.sh
-      - name: Create pull request
-        id: create-pr
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_BRANCH_NAME: ${{ needs.init.outputs.git_branch }}
-          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
-          TITLE: 'Workflow - Terraform'
-          BODY: 'Update terraform files to canonical format using `terraform fmt` from the ${{ needs.init.outputs.sha7 }} commit'
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_create.sh
-      - name: Close pull
-        id: pull-code
-        env:
-          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          PR_URL: ${{ steps.create-pr.outputs.pr_url }}
-          PR_NUMBER: ${{ steps.create-pr.outputs.pr_number }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_pull_close.sh
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+        uses: Zidmann/github-actions-template-prototype/ga-pull-diff@main
+        with:
+          github_token: "${{ env.GITHUB_TOKEN }}"
+          base_branch_name: "${{ needs.init.outputs.git_branch }}"
+          branch_name: "${{ needs.init.outputs.tmp_git_branch }}"
+          title: "Workflow - Terraform"
+          body: "Update terraform files to canonical format using `terraform fmt` from the ${{ needs.init.outputs.sha7 }} commit"
+          ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
+          working_directory: "sources/${{ matrix.directory }}"
 
   test-stagging:
     name: Test on stagging

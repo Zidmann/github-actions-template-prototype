@@ -1,3 +1,5 @@
+set -e
+
 echo "-------------------------"
 echo "[i] Creating temporary checking directory"
 mkdir sources-check/

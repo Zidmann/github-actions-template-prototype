@@ -1,3 +1,5 @@
+set -e
+
 PULL_REQUEST_OPENED=0
 
 echo "-------------------------"
@@ -12,4 +14,4 @@ else
 	PULL_REQUEST_OPENED=1
 fi
 
-echo "pull_request_opened=$PULL_REQUEST_OPENED" | tee -a $GITHUB_OUTPUT
+echo "pull_request_opened=$PULL_REQUEST_OPENED" | tee -a "$GITHUB_OUTPUT"
