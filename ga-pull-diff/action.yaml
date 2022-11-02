@@ -52,7 +52,7 @@ runs:
     - name: Close pull
       id: pull-code
       env:
-        BRANCH_NAME: "${{ needs.init.outputs.tmp_git_branch }}"
+        BRANCH_NAME: "${{ inputs.branch_name }}"
         GITHUB_REPOSITORY: "${{ github.repository }}"
         PR_URL: "${{ steps.create-pr.outputs.pr_url }}"
         PR_NUMBER: "${{ steps.create-pr.outputs.pr_number }}"

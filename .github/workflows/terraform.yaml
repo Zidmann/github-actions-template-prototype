@@ -74,8 +74,6 @@ jobs:
       run:
         shell: bash
         working-directory: sources/${{ matrix.directory }}
-    env:
-      GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
       - name: Cache
         id: cache
@@ -109,8 +107,6 @@ jobs:
       run:
         shell: bash
         working-directory: sources/${{ matrix.directory }}
-    env:
-      GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
       - name: Cache
         id: cache
@@ -142,8 +138,6 @@ jobs:
       run:
         shell: bash
         working-directory: .
-    env:
-      GITHUB_WORKSPACE: ${{ github.workspace }}
     permissions:
       contents: write
       pull-requests: write
