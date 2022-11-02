@@ -16,6 +16,10 @@ inputs:
     description: "The SSH private key"
   working_directory:
     description: "The path of the Terraform code"
+outputs:
+  pull_request_opened: 
+    description: "Flag to show if a pull request was opened"
+    value: ${{ steps.pull-code.outputs.pull_request_opened }}
 
 runs:
   using: "composite"

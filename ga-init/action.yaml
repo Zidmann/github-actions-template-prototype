@@ -8,60 +8,60 @@ inputs:
     description: "The GCP project ID which will manage the authentication"
 outputs:
   threads: 
-    description: ""
+    description: "The count of threads used by the action to execute parallel jobs"
     value: ${{ steps.settings.outputs.threads }}
 
   dir_list_dev: 
-    description: ""
+    description: "List of directories used to check the content"
     value: ${{ steps.settings.outputs.dir_list_dev }}
   dir_list_test: 
-    description: ""
+    description: "List of directories used to launch tests"
     value: ${{ steps.settings.outputs.dir_list_test }}
   dir_list_prod: 
-    description: ""
+    description: "List of directories used to deploy solution"
     value: ${{ steps.settings.outputs.dir_list_prod }}
 
   execute_check_and_format: 
-    description: ""
+    description: "Flag to show if the check and format jobs must be run"
     value: ${{ steps.settings.outputs.execute_check_and_format }}
   execute_test: 
-    description: ""
+    description: "Flag to show if the test jobs must be run"
     value: ${{ steps.settings.outputs.execute_test }}
   execute_deploy: 
-    description: ""
+    description: "Flag to show if the deploy jobs must be run"
     value: ${{ steps.settings.outputs.execute_deploy }}
 
   sha7: 
-    description: ""
+    description: "The shortcut of the commit hash"
     value: ${{ steps.settings.outputs.sha7 }}
   git_branch: 
-    description: ""
+    description: "The branch where the action was triggered"
     value: ${{ steps.settings.outputs.git_branch }}
   tmp_git_branch: 
-    description: ""
+    description: "The temporary branch which will be created if the action changes the code"
     value: ${{ steps.settings.outputs.tmp_git_branch }}
   cache_key: 
-    description: ""
+    description: "The key used to define the cache"
     value: ${{ steps.settings.outputs.cache_key }}
 
   state_gcp_bucket: 
-    description: ""
+    description: "The bucket where to store all the Terraform state files"
     value: ${{ steps.settings.outputs.state_gcp_bucket }}
 
   workloadidentity_provider_test: 
-    description: ""
+    description: "The provider used during some tests to authenticate with GCP projects"
     value: ${{ steps.settings.outputs.workloadidentity_provider_test }}
   workloadidentity_provider_prod: 
-    description: ""
+    description: "The provider used during some deployments to authenticate with GCP projects"
     value: ${{ steps.settings.outputs.workloadidentity_provider_prod }}
   token_format_test: 
-    description: ""
+    description: "The token format used during some tests to authenticate with GCP projects"
     value: ${{ steps.settings.outputs.token_format_test }}
   token_format_prod: 
-    description: ""
+    description: "The token format used during some deployments to authenticate with GCP projects"
     value: ${{ steps.settings.outputs.token_format_prod }}
   access_token_lifetime: 
-    description: ""
+    description: "The lifetime of the token provided when the action authenticate with GCP projects"
     value: ${{ steps.settings.outputs.access_token_lifetime }}
 
 runs:

@@ -127,13 +127,13 @@ jobs:
           working_directory: "sources/${{ matrix.directory }}"
 
   dev-pr-diff:
-    name: Pull formatted code
+    name: Push formatted code
     needs: [init, dev-fmt]
     runs-on: ubuntu-latest
     if: needs.init.outputs.execute_check_and_format == '1'
     environment: development
     outputs:
-      pull_request_opened: ${{ steps.pull-code.outputs.pull_request_opened }}
+      pull_request_opened: ${{ steps.pr.outputs.pull_request_opened }}
     defaults:
       run:
         shell: bash
@@ -183,6 +183,15 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
+      - name: Cache
+        id: cache
+        env:
+          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
+        uses: actions/cache@v3
+        with:
+          path: sources/
+          key: ${{ env.CACHE_KEY }}
+
       - name: Setup Terraform
         id: setup
         uses: hashicorp/setup-terraform@v2
@@ -204,14 +213,6 @@ jobs:
           service_account: ${{ env.SERVICE_ACCOUNT }}
           access_token_lifetime: ${{ env.ACCESS_TOKEN_LIFETIME }}
           credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
-      - name: Cache
-        id: cache
-        env:
-          CACHE_KEY: ${{ needs.init.outputs.cache_key }}
-        uses: actions/cache@v3
-        with:
-          path: sources/
-          key: ${{ env.CACHE_KEY }}
       - name: Hide information
         id: hide
         env:
@@ -242,6 +243,7 @@ jobs:
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
         run: |
           ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
+
       - name: Clean environment
         id: clean
         env:
