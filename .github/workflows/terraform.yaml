@@ -33,6 +33,7 @@ jobs:
       cache_key: ${{ steps.init.outputs.cache_key }}
 
       state_gcp_bucket: ${{ steps.init.outputs.state_gcp_bucket }}
+
       workloadidentity_provider_test: ${{ steps.init.outputs.workloadidentity_provider_test }}
       workloadidentity_provider_prod: ${{ steps.init.outputs.workloadidentity_provider_prod }}
       token_format_test: ${{ steps.init.outputs.token_format_test }}
