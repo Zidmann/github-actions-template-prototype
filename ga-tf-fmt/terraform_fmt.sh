@@ -56,11 +56,17 @@ then
 	
 	while true
 	do
-		echo -e "\n[i] Pull all the changes from the different jobs"
-		git pull origin "$BRANCH_NAME"
+		echo -e "\n[i] Check if the temporary branch exists remotely"
+		if [ "$(git ls-remote origin "$BRANCH_NAME")" != "" ]
+		then
+			echo -e "\n[i] Pull all the changes from the different jobs"
+			git pull origin "$BRANCH_NAME"
+		fi
 
+		set +e
 		echo -e "\n[i] Attempt to push the changes"
 		git push origin "$BRANCH_NAME" && break
+		set -e
 
 		echo -e "\n[-] Commit failed - new attempt in 5 seconds"
 		sleep 5
