@@ -1,0 +1,38 @@
+name: "Check directories"
+description: "Action designed to format the Terraform code"
+
+inputs:
+  branch_name:
+    description: "The branch where to push the formatted code"
+  ssh_private_key:
+    description: "The SSH private key"
+  working_directory:
+    description: "The path of the Terraform code"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      id: setup
+      uses: hashicorp/setup-terraform@v2
+    - name: Set up Cloud SDK
+      id: gcloud
+      uses: google-github-actions/setup-gcloud@v0
+    - name: Configure SSH
+      id: ssh
+      if: env.SSH_PRIVATE_KEY
+      env:
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+        SSH_PRIVATE_KEY: "${{ inputs.ssh_private_key }}"
+      run: |
+        "${{ github.action_path }}/../ga-common/ssh_configure.sh"
+      shell: bash
+    - name: Terraform format code
+      id: format
+      env:
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+        BRANCH_NAME: "${{ inputs.branch_name }}"
+        WORKING_DIRECTORY: "${{ inputs.working_directory }}"
+      run: |
+        "${{ github.action_path }}/terraform_fmt.sh"
+      shell: bash

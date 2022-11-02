@@ -88,7 +88,7 @@ jobs:
       - name: Terraform check code
         id: check
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
         uses: Zidmann/github-actions-template-prototype/ga-tf-check@main
         with:
           ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
@@ -112,12 +112,6 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
-      - name: Setup Terraform
-        id: setup
-        uses: hashicorp/setup-terraform@v2
-      - name: Set up Cloud SDK
-        id: gcloud
-        uses: google-github-actions/setup-gcloud@v0
       - name: Cache
         id: cache
         env:
@@ -126,22 +120,15 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Configure SSH
-        id: ssh
-        if: env.SSH_PRIVATE_KEY
+      - name: Terraform check code
+        id: check
         env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
-      - name: Terraform format code
-        id: format
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          BRANCH_NAME: ${{ needs.init.outputs.tmp_git_branch }}
-          WORKING_DIRECTORY: ${{ matrix.directory }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_fmt.sh
+          SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+        uses: Zidmann/github-actions-template-prototype/ga-tf-check@main
+        with:
+          branch_name: "${{ needs.init.outputs.tmp_git_branch }}"
+          ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
+          working_directory: "sources/${{ matrix.directory }}"
 
   dev-pull-diff:
     name: Pull formatted code
