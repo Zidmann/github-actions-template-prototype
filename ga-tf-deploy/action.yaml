@@ -70,7 +70,7 @@ runs:
         GCP_PROJECT: "${{ env.GCP_PROJECT }}"
         GOOGLE_CLOUD_PROJECT: "${{ env.GOOGLE_CLOUD_PROJECT }}"
       run: |
-        "${{ github.action_path }}/terraform_hide_secrets.sh"
+        "${{ github.action_path }}/hide_secrets.sh"
       shell: bash
     - name: Deploy on GCP
       id: deploy
