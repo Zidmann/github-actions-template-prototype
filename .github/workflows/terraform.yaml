@@ -191,58 +191,28 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-
-      - name: Setup Terraform
-        id: setup
-        uses: hashicorp/setup-terraform@v2
-      - name: Set up Cloud SDK
-        id: gcloud
-        uses: google-github-actions/setup-gcloud@v0
-      - name: Authenticate Google
-        id: auth
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          TOKEN_FORMAT:  ${{ needs.init.outputs.token_format_test }}
-          ACCESS_TOKEN_LIFETIME:  ${{ needs.init.outputs.access_token_lifetime }}
-          WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_test }}
-        uses: google-github-actions/auth@v0
-        with:
-          token_format: ${{ env.TOKEN_FORMAT }}
-          workload_identity_provider: ${{ env.WORKLOADIDENTITY_PROVIDER }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
-          access_token_lifetime: ${{ env.ACCESS_TOKEN_LIFETIME }}
-          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
-      - name: Hide information
-        id: hide
-        env:
-          PROJECT_PREFIX: ${{ secrets.PROJECT_PREFIX }}
-          CLOUDSDK_CORE_PROJECT: ${{ env.CLOUDSDK_CORE_PROJECT }}
-          CLOUDSDK_PROJECT: ${{ env.CLOUDSDK_PROJECT }}
-          GCLOUD_PROJECT: ${{ env.GCLOUD_PROJECT }}
-          GCP_PROJECT: ${{ env.GCP_PROJECT }}
-          GOOGLE_CLOUD_PROJECT: ${{ env.GOOGLE_CLOUD_PROJECT }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_hide_secrets.sh
-      - name: Configure SSH
-        id: ssh
-        if: env.SSH_PRIVATE_KEY
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
-      - name: Deploy on test
+      - name: Deploy on stagging environments
         id: deploy
         env:
-          STATE_GCP_BUCKET: ${{ needs.init.outputs.state_gcp_bucket }}
-          STATE_KEY: ${{ needs.init.outputs.sha7 }}
-          SUFFIX_NAME: ${{ needs.init.outputs.sha7 }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          WORKING_DIRECTORY: ${{ matrix.directory }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
+          PROJECT_ID: "${{ secrets.PROJECT_ID }}"
+          PROJECT_PREFIX: "${{ secrets.PROJECT_PREFIX }}"
+          SERVICE_ACCOUNT: "${{ secrets.SERVICE_ACCOUNT }}"
+          SERVICE_ACCOUNT_KEY: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
+          SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+        uses: Zidmann/github-actions-template-prototype/ga-tf-deploy@main
+        with:
+          project_id: "${{ env.PROJECT_ID }}"
+          project_prefix: "${{ env.PROJECT_PREFIX }}"
+          service_account: "${{ env.SERVICE_ACCOUNT }}"
+          service_account_key: "${{ env.SERVICE_ACCOUNT_KEY }}"
+          token_format: "${{ needs.init.outputs.token_format_test }}"
+          access_token_lifetime: "${{ needs.init.outputs.access_token_lifetime }}"
+          workloadidentity_provider: "${{ needs.init.outputs.workloadidentity_provider_test }}"
+          state_gcp_bucket: "${{ needs.init.outputs.state_gcp_bucket }}"
+          state_key: "${{ needs.init.outputs.sha7 }}"
+          suffix_name: "${{ needs.init.outputs.sha7 }}"
+          ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
+          working_directory: "sources/${{ matrix.directory }}"
 
       - name: Clean environment
         id: clean
@@ -270,27 +240,6 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
-      - name: Setup Terraform
-        id: setup
-        uses: hashicorp/setup-terraform@v2
-      - name: Set up Cloud SDK
-        id: gcloud
-        uses: google-github-actions/setup-gcloud@v0
-      - name: Authenticate Google
-        id: auth
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-          TOKEN_FORMAT:  ${{ needs.init.outputs.token_format_prod }}
-          ACCESS_TOKEN_LIFETIME:  ${{ needs.init.outputs.access_token_lifetime }}
-          WORKLOADIDENTITY_PROVIDER: ${{ needs.init.outputs.workloadidentity_provider_prod }}
-        uses: google-github-actions/auth@v0
-        with:
-          token_format: ${{ env.TOKEN_FORMAT }}
-          workload_identity_provider: ${{ env.WORKLOADIDENTITY_PROVIDER }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
-          access_token_lifetime: ${{ env.ACCESS_TOKEN_LIFETIME }}
-          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
       - name: Cache
         id: cache
         env:
@@ -299,32 +248,25 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Hide information
-        id: hide
-        env:
-          PROJECT_PREFIX: ${{ secrets.PROJECT_PREFIX }}
-          CLOUDSDK_CORE_PROJECT: ${{ env.CLOUDSDK_CORE_PROJECT }}
-          CLOUDSDK_PROJECT: ${{ env.CLOUDSDK_PROJECT }}
-          GCLOUD_PROJECT: ${{ env.GCLOUD_PROJECT }}
-          GCP_PROJECT: ${{ env.GCP_PROJECT }}
-          GOOGLE_CLOUD_PROJECT: ${{ env.GOOGLE_CLOUD_PROJECT }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_init_hide_secrets.sh
-      - name: Configure SSH
-        id: ssh
-        if: env.SSH_PRIVATE_KEY
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/common_ssh_configure.sh
-      - name: Deploy on production
+      - name: Deploy on stagging environments
         id: deploy
         env:
-          STATE_GCP_BUCKET: ${{ needs.init.outputs.state_gcp_bucket }}
-          STATE_KEY: production
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          WORKING_DIRECTORY: ${{ matrix.directory }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
-        run: |
-          ${{ env.GITHUB_WORKSPACE }}/sources/.github/scripts/terraform_deploy.sh
+          PROJECT_ID: "${{ secrets.PROJECT_ID }}"
+          PROJECT_PREFIX: "${{ secrets.PROJECT_PREFIX }}"
+          SERVICE_ACCOUNT: "${{ secrets.SERVICE_ACCOUNT }}"
+          SERVICE_ACCOUNT_KEY: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
+          SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+        uses: Zidmann/github-actions-template-prototype/ga-tf-deploy@main
+        with:
+          project_id: "${{ env.PROJECT_ID }}"
+          project_prefix: "${{ env.PROJECT_PREFIX }}"
+          service_account: "${{ env.SERVICE_ACCOUNT }}"
+          service_account_key: "${{ env.SERVICE_ACCOUNT_KEY }}"
+          token_format: "${{ needs.init.outputs.token_format_prod }}"
+          access_token_lifetime: "${{ needs.init.outputs.access_token_lifetime }}"
+          workloadidentity_provider: "${{ needs.init.outputs.workloadidentity_provider_prod }}"
+          state_gcp_bucket: "${{ needs.init.outputs.state_gcp_bucket }}"
+          state_key: "production"
+          suffix_name: "${{ needs.init.outputs.sha7 }}"
+          ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
+          working_directory: "sources/${{ matrix.directory }}"
