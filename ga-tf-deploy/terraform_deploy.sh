@@ -3,8 +3,8 @@ set -e
 if [ "$WORKING_DIRECTORY" != "" ]
 then
 	echo "-------------------------"
-	echo "[i] Moving to the Terraform directory ($WORKING_DIR)"
-	cd "$WORKING_DIR"
+	echo "[i] Moving to the Terraform directory ($WORKING_DIRECTORY)"
+	cd "$WORKING_DIRECTORY"
 fi
 
 echo "-------------------------"
