@@ -1,0 +1,86 @@
+name: "Deploy Terraform code"
+description: "Action designed to deploy the Terraform code on a GCP project"
+
+inputs:
+  project_id:
+    description: "The project ID of the GCP project where to deploy"
+  project_prefix:
+    description: "The prefix of the project ID or components to hide to avoid any attack"
+  service_account:
+    description: "The service account to use to authenticate with GCP projects"
+  service_account_key:
+    description: "The JSON key of the service account to use to authenticate with GCP projects"
+  token_format:
+    description: "The token format used to authenticate with GCP projects"
+  access_token_lifetime:
+    description: "The lifetime of the token provided when the action authenticate with GCP projects"
+  workloadidentity_provider:
+    description: "The provider used to authenticate with GCP projects (if no service account key is used)"
+  state_gcp_bucket:
+    description: "The bucket where to store all the Terraform state files"
+  state_key:
+    description: "The key used in the path of the state file"
+  suffix_name:
+    description: "The suffix used with the name of the different components created"
+  ssh_private_key:
+    description: "The SSH private key"
+  working_directory:
+    description: "The path of the Terraform code"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure SSH
+      id: ssh
+      if: env.SSH_PRIVATE_KEY
+      env:
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+        SSH_PRIVATE_KEY: "${{ inputs.ssh_private_key }}"
+      run: |
+        "${{ github.action_path }}/../ga-common/ssh_configure.sh"
+      shell: bash
+    - name: Setup Terraform
+      id: setup
+      uses: hashicorp/setup-terraform@v2
+    - name: Set up Cloud SDK
+      id: gcloud
+      uses: google-github-actions/setup-gcloud@v0
+    - name: Authenticate Google
+      id: auth
+      env:
+        SERVICE_ACCOUNT: "${{ inputs.service_account }}"
+        SERVICE_ACCOUNT_KEY: "${{ inputs.service_account_key }}"
+        TOKEN_FORMAT: "${{ inputs.token_format }}"
+        ACCESS_TOKEN_LIFETIME: "${{ inputs.access_token_lifetime }}"
+        WORKLOADIDENTITY_PROVIDER: "${{ inputs.workloadidentity_provider }}"
+      uses: google-github-actions/auth@v0
+      with:
+        token_format: "${{ env.TOKEN_FORMAT }}"
+        workload_identity_provider: "${{ env.WORKLOADIDENTITY_PROVIDER }}"
+        service_account: "${{ env.SERVICE_ACCOUNT }}"
+        access_token_lifetime: "${{ env.ACCESS_TOKEN_LIFETIME }}"
+        credentials_json: "${{ env.SERVICE_ACCOUNT_KEY }}"
+    - name: Hide information
+      id: hide
+      env:
+        PROJECT_PREFIX: "${{ inputs.project_prefix }}"
+        CLOUDSDK_CORE_PROJECT: "${{ env.CLOUDSDK_CORE_PROJECT }}"
+        CLOUDSDK_PROJECT: "${{ env.CLOUDSDK_PROJECT }}"
+        GCLOUD_PROJECT: "${{ env.GCLOUD_PROJECT }}"
+        GCP_PROJECT: "${{ env.GCP_PROJECT }}"
+        GOOGLE_CLOUD_PROJECT: "${{ env.GOOGLE_CLOUD_PROJECT }}"
+      run: |
+        "${{ github.action_path }}/terraform_hide_secrets.sh"
+      shell: bash
+    - name: Deploy on GCP
+      id: deploy
+      env:
+        STATE_GCP_BUCKET: "${{ inputs.state_gcp_bucket }}"
+        STATE_KEY: "${{ inputs.state_key }}"
+        SUFFIX_NAME: "${{ inputs.suffix_name }}"
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+        WORKING_DIRECTORY: "${{ inputs.working_directory }}"
+        PROJECT_ID: "${{ inputs.project_id }}"
+      run: |
+        "${{ github.action_path }}/terraform_deploy.sh"
+      shell: bash

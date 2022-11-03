@@ -19,7 +19,7 @@ inputs:
 outputs:
   pull_request_opened: 
     description: "Flag to show if a pull request was opened"
-    value: ${{ steps.pull-code.outputs.pull_request_opened }}
+    value: "${{ steps.pull-code.outputs.pull_request_opened }}"
 
 runs:
   using: "composite"

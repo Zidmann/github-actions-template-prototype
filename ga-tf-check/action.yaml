@@ -1,4 +1,4 @@
-name: "Check directories"
+name: "Check Terraform directories"
 description: "Action designed to check the Terraform code"
 
 inputs:
@@ -21,6 +21,8 @@ runs:
       shell: bash
     - name: Terraform check code
       id: check
+      env:
+        WORKING_DIRECTORY: "${{ inputs.working_directory }}"
       run: |
-        "${{ github.action_path }}/terraform_check.sh" "${{ inputs.working_directory }}"
+        "${{ github.action_path }}/terraform_check.sh"
       shell: bash

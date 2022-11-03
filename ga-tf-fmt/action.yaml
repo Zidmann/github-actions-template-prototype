@@ -1,4 +1,4 @@
-name: "Check directories"
+name: "Format Terraform directories"
 description: "Action designed to format the Terraform code"
 
 inputs:
@@ -34,5 +34,5 @@ runs:
         BRANCH_NAME: "${{ inputs.branch_name }}"
         WORKING_DIRECTORY: "${{ inputs.working_directory }}"
       run: |
-        "${{ github.action_path }}/terraform_fmt.sh" "${{ inputs.working_directory }}"
+        "${{ github.action_path }}/terraform_fmt.sh"
       shell: bash
