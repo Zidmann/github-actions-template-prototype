@@ -1,6 +1,6 @@
 set -e
 
-if [ "$WORKING_DIRECTORY" != "" ]
+if [ "$WORKING_DIRECTORY" != "" ]
 then
 	echo "-------------------------"
 	echo "[i] Moving to the Terraform directory ($WORKING_DIR)"
