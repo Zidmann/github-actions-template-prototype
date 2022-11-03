@@ -267,6 +267,5 @@ jobs:
           workloadidentity_provider: "${{ needs.init.outputs.workloadidentity_provider_prod }}"
           state_gcp_bucket: "${{ needs.init.outputs.state_gcp_bucket }}"
           state_key: "production"
-          suffix_name: "${{ needs.init.outputs.sha7 }}"
           ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
           working_directory: "sources/${{ matrix.directory }}"
