@@ -1,9 +1,9 @@
-name: "Deploy Terraform code"
-description: "Action designed to deploy the Terraform code on a GCP project"
+name: "Destroy Terraform"
+description: "Action designed to remove the components on a GCP project previously created by Terraform code"
 
 inputs:
   project_id:
-    description: "The project ID of the GCP project where to deploy"
+    description: "The project ID of the GCP project where to destroy"
   project_prefix:
     description: "The prefix of the project ID or components to hide to avoid any attack"
   service_account:
@@ -72,8 +72,8 @@ runs:
       run: |
         "${{ github.action_path }}/../ga-common/hide_secrets.sh"
       shell: bash
-    - name: Deploy on GCP
-      id: deploy
+    - name: Destroy on GCP
+      id: destroy
       env:
         STATE_GCP_BUCKET: "${{ inputs.state_gcp_bucket }}"
         STATE_KEY: "${{ inputs.state_key }}"
@@ -82,5 +82,5 @@ runs:
         WORKING_DIRECTORY: "${{ inputs.working_directory }}"
         PROJECT_ID: "${{ inputs.project_id }}"
       run: |
-        "${{ github.action_path }}/terraform_deploy.sh"
+        "${{ github.action_path }}/terraform_destroy.sh"
       shell: bash

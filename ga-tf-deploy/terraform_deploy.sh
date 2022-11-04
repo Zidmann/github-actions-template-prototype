@@ -13,8 +13,8 @@ terraform init -backend-config="bucket=$STATE_GCP_BUCKET" -backend-config="prefi
 
 echo "-------------------------"
 echo "[i] Printing the Terraform plan"
-terraform plan -no-color -var "project_id=$PROJECT_ID" -var "component_name_suffix=$SUFFIX_NAME"
+terraform plan -no-color -var "project_id=$PROJECT_ID" -var "component_name_suffix=$SUFFIX_NAME" -out=plan.out
 
 echo "-------------------------"
 echo "[i] Applying the Terraform changes"
-terraform apply -auto-approve -var "project_id=$PROJECT_ID" -var "component_name_suffix=$SUFFIX_NAME"
+terraform apply plan.out -auto-approve -var "project_id=$PROJECT_ID" -var "component_name_suffix=$SUFFIX_NAME"
