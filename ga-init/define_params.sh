@@ -60,7 +60,7 @@ echo "-------------------------"
 echo "[i] Defining the jobs to execute according the branch and the matrix"
 EXECUTE_CHECK_AND_FORMAT=0
 EXECUTE_TEST=0
-EXECUTE_DEPLOY=0
+EXECUTE_DEPLOY=0	
 
 if [ "$GITHUB_BRANCH" == "main" ]
 then
@@ -79,15 +79,15 @@ else
 	exit 1
 fi
 
-if [ "$DIRECTORY_LIST_DEV" == "[\".\"]" ]
+if [ "$DIRECTORY_LIST_DEV" == "[\"\"]" ]
 then
 	EXECUTE_CHECK_AND_FORMAT=0
 fi
-if [ "$DIRECTORY_LIST_TEST" == "[\".\"]" ]
+if [ "$DIRECTORY_LIST_TEST" == "[\"\"]" ]
 then
 	EXECUTE_TEST=0
 fi
-if [ "$DIRECTORY_LIST_PROD" == "[\".\"]" ]
+if [ "$DIRECTORY_LIST_PROD" == "[\"\"]" ]
 then
 	EXECUTE_DEPLOY=0
 fi
@@ -107,7 +107,7 @@ echo "dir_list_prod=$DIRECTORY_LIST_PROD" | tee -a "$GITHUB_OUTPUT"
 if [ "$WORKFLOW_NAME" == "terraform" ]
 then
 	echo "-------------------------"
-	echo "[i] Defining the state storing and authenticating information"
+			echo "[i] Defining the state storing and authenticating information"
 	echo "state_gcp_bucket=$STATE_GCP_BUCKET" | tee -a "$GITHUB_OUTPUT"
 fi
 
