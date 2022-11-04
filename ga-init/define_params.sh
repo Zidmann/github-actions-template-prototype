@@ -79,15 +79,15 @@ else
 	exit 1
 fi
 
-if [ "$DIRECTORY_LIST_DEV" == "[\"\"]" ]
+if [ "$DIRECTORY_LIST_DEV" == "[]" ]
 then
 	EXECUTE_CHECK_AND_FORMAT=0
 fi
-if [ "$DIRECTORY_LIST_TEST" == "[\"\"]" ]
+if [ "$DIRECTORY_LIST_TEST" == "[]" ]
 then
 	EXECUTE_TEST=0
 fi
-if [ "$DIRECTORY_LIST_PROD" == "[\"\"]" ]
+if [ "$DIRECTORY_LIST_PROD" == "[]" ]
 then
 	EXECUTE_DEPLOY=0
 fi
