@@ -213,7 +213,7 @@ jobs:
           suffix_name: "${{ needs.init.outputs.sha7 }}"
           ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
           working_directory: "sources/${{ matrix.directory }}"
-      - name: Clean environment
+      - name: Clean stagging environment
         id: clean
         if: always()
         env:
