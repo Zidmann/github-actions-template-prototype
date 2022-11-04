@@ -9,4 +9,4 @@ fi
 
 echo "-------------------------"
 echo "[i] Validate the content of the shell project"
-find . -type f -name "*.sh" -exec shellcheck --shell=bash {} +
+find . -type f -name "*.sh" -exec shellcheck --shell=bash --exclude=SC2153,SC1090 {} +

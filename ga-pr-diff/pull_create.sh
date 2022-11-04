@@ -11,11 +11,6 @@ git pull origin "$BRANCH_NAME" 2>/dev/null
 set -e
 git branch -a
 GIT_DIFF=$(git diff "$BASE_BRANCH_NAME" "remotes/origin/$BRANCH_NAME")
-if [ "$?" != "0" ]
-then
-	echo "[-] Error during comparing the branches"
-	exit 1
-fi
 NB_DIFF=$(echo "$GIT_DIFF" | awk NF | wc -l)
 if [ "$NB_DIFF" == "0" ]
 then
@@ -30,11 +25,6 @@ fi
 echo "-------------------------"
 echo "[i] Creating a pull request"
 PR_URL=$(gh pr create -B "$BASE_BRANCH_NAME" -H "$BRANCH_NAME" --title "$TITLE" --body "$BODY")
-if [ "$?" != "0" ]
-then
-	echo "[-] Error during opening the pull request"
-	exit 1
-fi
 
 if [ "$PR_URL" == "" ]
 then
