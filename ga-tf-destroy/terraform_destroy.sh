@@ -1,3 +1,12 @@
+set -e
+
+if [ "$WORKING_DIRECTORY" != "" ]
+then
+	echo "-------------------------"
+	echo "[i] Moving to the Terraform directory ($WORKING_DIRECTORY)"
+	cd "$WORKING_DIRECTORY"
+fi
+
 if [[ "$INIT_ALREADY_DONE" == "" ]] || [[ "$INIT_ALREADY_DONE" == "0" ]]
 then
 	echo "-------------------------"
