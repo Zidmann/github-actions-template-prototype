@@ -27,28 +27,6 @@ fi
 echo "cache_key=${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}" | tee -a "$GITHUB_OUTPUT"
 
 echo "-------------------------"
-echo "[i] Defining the jobs to execute according the branch"
-if [ "$GITHUB_BRANCH" == "main" ]
-	then
-	echo "execute_check_and_format=1" | tee -a "$GITHUB_OUTPUT"
-	echo "execute_test=1" | tee -a "$GITHUB_OUTPUT"
-	echo "execute_deploy=1" | tee -a "$GITHUB_OUTPUT"
-elif [ "$GITHUB_BRANCH" == "staging" ]
-then
-	echo "execute_check_and_format=1" | tee -a "$GITHUB_OUTPUT"
-	echo "execute_test=1" | tee -a "$GITHUB_OUTPUT"
-	echo "execute_deploy=0" | tee -a "$GITHUB_OUTPUT"
-elif [ "$GITHUB_BRANCH" == "develop" ]
-then
-	echo "execute_check_and_format=1" | tee -a "$GITHUB_OUTPUT"
-	echo "execute_test=0" | tee -a "$GITHUB_OUTPUT"
-	echo "execute_deploy=0" | tee -a "$GITHUB_OUTPUT"
-else
-	echo "[-] Error : unaccepted branch name"
-	exit 1
-fi
-
-echo "-------------------------"
 echo "[i] Loading the parameters file"
 if [ "$ENV_PATH" == "" ]
 then
@@ -77,6 +55,47 @@ if [ "$DIRECTORY_LIST_PROD" == "" ]
 then
 	DIRECTORY_LIST_PROD="[\".\"]"
 fi
+
+echo "-------------------------"
+echo "[i] Defining the jobs to execute according the branch and the matrix"
+EXECUTE_CHECK_AND_FORMAT=0
+EXECUTE_TEST=0
+EXECUTE_DEPLOY=0
+
+if [ "$GITHUB_BRANCH" == "main" ]
+then
+	EXECUTE_CHECK_AND_FORMAT=1
+	EXECUTE_TEST=1
+	EXECUTE_DEPLOY=1
+elif [ "$GITHUB_BRANCH" == "staging" ]
+then
+	EXECUTE_CHECK_AND_FORMAT=1
+	EXECUTE_TEST=1
+elif [ "$GITHUB_BRANCH" == "develop" ]
+then
+	EXECUTE_CHECK_AND_FORMAT=1
+else
+	echo "[-] Error : unaccepted branch name"
+	exit 1
+fi
+
+if [ "$DIRECTORY_LIST_DEV" == "[\".\"]" ]
+then
+	EXECUTE_CHECK_AND_FORMAT=0
+fi
+if [ "$DIRECTORY_LIST_TEST" == "[\".\"]" ]
+then
+	EXECUTE_TEST=0
+fi
+if [ "$DIRECTORY_LIST_PROD" == "[\".\"]" ]
+then
+	EXECUTE_DEPLOY=0
+fi
+
+echo "execute_check_and_format=$EXECUTE_CHECK_AND_FORMAT" | tee -a "$GITHUB_OUTPUT"
+echo "execute_test=$EXECUTE_TEST" | tee -a "$GITHUB_OUTPUT"
+echo "execute_deploy=$EXECUTE_DEPLOY" | tee -a "$GITHUB_OUTPUT"
+
 
 echo "-------------------------"
 echo "[i] Exporting matrix parameters"
