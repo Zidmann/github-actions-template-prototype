@@ -60,10 +60,6 @@ jobs:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
         directory: ${{ fromJson(needs.init.outputs.dir_list_dev) }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: sources/${{ matrix.directory }}
     steps:
       - name: Cache
         id: cache
@@ -90,10 +86,6 @@ jobs:
       max-parallel: ${{ fromJson(needs.init.outputs.threads) }}
       matrix:
         directory: ${{ fromJson(needs.init.outputs.dir_list_test) }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: sources/${{ matrix.directory }}
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
