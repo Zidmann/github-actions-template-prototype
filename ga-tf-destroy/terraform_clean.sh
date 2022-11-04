@@ -1,6 +1,9 @@
-echo "-------------------------"
-echo "[i] Initiating the Terraform project"
-terraform init -backend-config="bucket=$STATE_GCP_BUCKET" -backend-config="prefix=terraform/state/$GITHUB_REPOSITORY/$WORKING_DIRECTORY/$STATE_KEY"
+if [[ "$INIT_ALREADY_DONE" == "" ]] || [[ "$INIT_ALREADY_DONE" == "0" ]]
+then
+	echo "-------------------------"
+	echo "[i] Initiating the Terraform project"
+	terraform init -backend-config="bucket=$STATE_GCP_BUCKET" -backend-config="prefix=terraform/state/$GITHUB_REPOSITORY/$WORKING_DIRECTORY/$STATE_KEY"
+fi
 
 echo "-------------------------"
 echo "[i] Removing the Terraform project components"
