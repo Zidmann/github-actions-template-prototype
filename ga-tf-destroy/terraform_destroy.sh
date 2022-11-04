@@ -7,7 +7,7 @@ then
 	cd "$WORKING_DIRECTORY"
 fi
 
-if [[ "$INIT_ALREADY_DONE" == "" ]] || [[ "$INIT_ALREADY_DONE" == "0" ]]
+if [[ "$INIT_ALREADY_DONE" == "" ]] || [[ "$INIT_ALREADY_DONE" != "1" ]]
 then
 	echo "-------------------------"
 	echo "[i] Initiating the Terraform project"
