@@ -34,7 +34,7 @@ runs:
   steps:
     - name: Configure SSH
       id: ssh
-      if: ${{ (env.SSH_PRIVATE_KEY != "") && (inputs.init_already_done) != "1" }}
+      if: ${{ (env.SSH_PRIVATE_KEY != '') && (inputs.init_already_done) != '1' }}
       env:
         GITHUB_REPOSITORY: "${{ github.repository }}"
         SSH_PRIVATE_KEY: "${{ inputs.ssh_private_key }}"
@@ -43,15 +43,15 @@ runs:
       shell: bash
     - name: Setup Terraform
       id: setup
-      if: ${{ (inputs.init_already_done) != "1" }}
+      if: ${{ (inputs.init_already_done) != '1' }}
       uses: hashicorp/setup-terraform@v2
     - name: Set up Cloud SDK
       id: gcloud
-      if: ${{ (inputs.init_already_done) != "1" }}
+      if: ${{ (inputs.init_already_done) != '1' }}
       uses: google-github-actions/setup-gcloud@v0
     - name: Authenticate Google
       id: auth
-      if: ${{ (inputs.init_already_done) != "1" }}
+      if: ${{ (inputs.init_already_done) != '1' }}
       env:
         SERVICE_ACCOUNT: "${{ inputs.service_account }}"
         SERVICE_ACCOUNT_KEY: "${{ inputs.service_account_key }}"
@@ -67,7 +67,7 @@ runs:
         credentials_json: "${{ env.SERVICE_ACCOUNT_KEY }}"
     - name: Hide information
       id: hide
-      if: ${{ (inputs.init_already_done) != "1" }}
+      if: ${{ (inputs.init_already_done) != '1' }}
       env:
         PROJECT_PREFIX: "${{ inputs.project_prefix }}"
         CLOUDSDK_CORE_PROJECT: "${{ env.CLOUDSDK_CORE_PROJECT }}"
