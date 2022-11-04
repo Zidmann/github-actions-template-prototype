@@ -1,0 +1,17 @@
+name: "Check shell directories"
+description: "Action designed to check the shell code"
+
+inputs:
+  working_directory:
+    description: "The path of the shell code"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Shell check code
+      id: check
+      env:
+        WORKING_DIRECTORY: "${{ inputs.working_directory }}"
+      run: |
+        "${{ github.action_path }}/shell_check.sh"
+      shell: bash
