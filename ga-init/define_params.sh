@@ -20,7 +20,10 @@ echo "-------------------------"
 echo "[i] Exporting basics parameters"
 echo "sha7=$GITHUB_SHA7" | tee -a "$GITHUB_OUTPUT"
 echo "git_branch=$GITHUB_BRANCH" | tee -a "$GITHUB_OUTPUT"
-echo "tmp_git_branch=tmp_${WORKFLOW_NAME}_${GITHUB_SHA7}" | tee -a "$GITHUB_OUTPUT"
+if [ "$WORKFLOW_NAME" == "terraform" ]
+then
+	echo "tmp_git_branch=tmp_${WORKFLOW_NAME}_${GITHUB_SHA7}" | tee -a "$GITHUB_OUTPUT"
+fi
 echo "cache_key=${WORKFLOW_NAME}_${GITHUB_BRANCH}_${GITHUB_SHA7}" | tee -a "$GITHUB_OUTPUT"
 
 echo "-------------------------"
