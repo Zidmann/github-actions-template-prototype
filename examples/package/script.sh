@@ -22,6 +22,7 @@ then
 	exit "$RETURN_CODE"
 fi
 
+echo "Version: $SCRIPT_VERSION"
 echo "Hello $NAME_PARAM"
 
 exit 0
