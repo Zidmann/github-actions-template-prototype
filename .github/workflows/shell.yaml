@@ -98,38 +98,6 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Deploy on stagging environment
-        id: deploy
-        env:
-          PROJECT_ID: "${{ secrets.PROJECT_ID }}"
-          PROJECT_PREFIX: "${{ secrets.PROJECT_PREFIX }}"
-          SERVICE_ACCOUNT: "${{ secrets.SERVICE_ACCOUNT }}"
-          SERVICE_ACCOUNT_KEY: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
-          SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
-        uses: Zidmann/github-actions-template-prototype/ga-tf-deploy@main
-        with:
-          project_id: "${{ env.PROJECT_ID }}"
-          project_prefix: "${{ env.PROJECT_PREFIX }}"
-          service_account: "${{ env.SERVICE_ACCOUNT }}"
-          service_account_key: "${{ env.SERVICE_ACCOUNT_KEY }}"
-          token_format: "${{ needs.init.outputs.token_format_test }}"
-          access_token_lifetime: "${{ needs.init.outputs.access_token_lifetime }}"
-          workloadidentity_provider: "${{ needs.init.outputs.workloadidentity_provider_test }}"
-          state_key: "${{ needs.init.outputs.sha7 }}"
-          suffix_name: "${{ needs.init.outputs.sha7 }}"
-          ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
-          working_directory: "sources/${{ matrix.directory }}"
-      - name: Clean stagging environment
-        id: clean
-        if: always()
-        env:
-          PROJECT_ID: "${{ secrets.PROJECT_ID }}"
-        uses: Zidmann/github-actions-template-prototype/ga-tf-destroy@main
-        with:
-          init_already_done: "1"
-          project_id: "${{ env.PROJECT_ID }}"
-          suffix_name: "${{ needs.init.outputs.sha7 }}"
-          working_directory: "sources/${{ matrix.directory }}"
 
   deploy-production:
     name: Deploy on production
@@ -153,23 +121,11 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Deploy on production environment
-        id: deploy
-        env:
-          PROJECT_ID: "${{ secrets.PROJECT_ID }}"
-          PROJECT_PREFIX: "${{ secrets.PROJECT_PREFIX }}"
-          SERVICE_ACCOUNT: "${{ secrets.SERVICE_ACCOUNT }}"
-          SERVICE_ACCOUNT_KEY: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
-          SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
-        uses: Zidmann/github-actions-template-prototype/ga-tf-deploy@main
+      - name: Build a package
+        id: build
+        uses: Zidmann/github-actions-template-prototype/ga-build-package@main
         with:
-          project_id: "${{ env.PROJECT_ID }}"
-          project_prefix: "${{ env.PROJECT_PREFIX }}"
-          service_account: "${{ env.SERVICE_ACCOUNT }}"
-          service_account_key: "${{ env.SERVICE_ACCOUNT_KEY }}"
-          token_format: "${{ needs.init.outputs.token_format_prod }}"
-          access_token_lifetime: "${{ needs.init.outputs.access_token_lifetime }}"
-          workloadidentity_provider: "${{ needs.init.outputs.workloadidentity_provider_prod }}"
-          state_key: "production"
-          ssh_private_key: "${{ env.SSH_PRIVATE_KEY }}"
+          package_filename: "TEST"
+          package_version: "1.0.0"
+          package_type: "DEB"
           working_directory: "sources/${{ matrix.directory }}"

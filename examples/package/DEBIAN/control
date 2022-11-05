@@ -1,0 +1,8 @@
+Package: Exemple-Shell
+Version: 1.0.0
+Section: base
+Priority: optional
+Architecture: all
+Depends: bash
+Maintainer: Emmanuel ZIDEL-CAUFFET <emmanuel.zidel@gmail.com>
+Description: A simple package to test how to build the package
