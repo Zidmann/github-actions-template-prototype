@@ -125,7 +125,7 @@ jobs:
         id: build
         uses: Zidmann/github-actions-template-prototype/ga-build-package@main
         with:
-          package_filename: "TEST"
+          package_filename: "TEST.deb"
           package_version: "1.0.0"
           package_type: "DEB"
           working_directory: "sources/${{ matrix.directory }}"
