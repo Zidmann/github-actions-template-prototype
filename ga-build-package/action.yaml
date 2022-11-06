@@ -2,6 +2,8 @@ name: "Build a package"
 description: "Action designed to build a Linux package (DEB or RPM)"
 
 inputs:
+  artifact_name:
+    description: "The name of the artifact which will be stored"
   package_filename:
     description: "The name of the package to build"
   package_version:
@@ -24,3 +26,12 @@ runs:
       run: |
         "${{ github.action_path }}/build_package.sh"
       shell: bash
+    - name: Upload artifact
+      id: upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: "${{ inputs.artifact_name }}"
+        path: "${{ inputs.working_directory }}/${{ inputs.package_filename }}"
+        if-no-files-found: error
+
+
