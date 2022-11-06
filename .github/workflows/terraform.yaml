@@ -177,7 +177,7 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Deploy on stagging environment
+      - name: Deploy on stagging
         id: deploy
         env:
           PROJECT_ID: "${{ secrets.PROJECT_ID }}"
@@ -233,7 +233,7 @@ jobs:
         with:
           path: sources/
           key: ${{ env.CACHE_KEY }}
-      - name: Deploy on production environment
+      - name: Deploy on production
         id: deploy
         env:
           PROJECT_ID: "${{ secrets.PROJECT_ID }}"
