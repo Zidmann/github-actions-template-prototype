@@ -30,9 +30,15 @@ runs:
     - name: Terraform format code
       id: format
       env:
-        GITHUB_REPOSITORY: "${{ github.repository }}"
-        BRANCH_NAME: "${{ inputs.branch_name }}"
         WORKING_DIRECTORY: "${{ inputs.working_directory }}"
       run: |
         "${{ github.action_path }}/terraform_fmt.sh"
+      shell: bash
+    - name: Push code
+      id: push
+      env:
+        BRANCH_NAME: "${{ inputs.branch_name }}"
+        WORKING_DIRECTORY: "${{ inputs.working_directory }}"
+      run: |
+        "${{ github.action_path }}/../ga-common/push_code.sh"
       shell: bash

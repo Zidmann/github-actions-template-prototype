@@ -1,4 +1,4 @@
- set -e
+set -e
 
 if [ "$WORKING_DIRECTORY" != "" ]
 then

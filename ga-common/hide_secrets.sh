@@ -1,3 +1,5 @@
+set -e
+
 echo "-------------------------"
 if [ "$PROJECT_PREFIX" == "" ]
 then

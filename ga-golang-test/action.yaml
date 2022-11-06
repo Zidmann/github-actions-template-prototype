@@ -1,0 +1,24 @@
+name: "Test Golang directories"
+description: "Action designed to test the Golang code"
+
+inputs:
+  go-version:
+    description: "The version of the Golang compiler"
+  working_directory:
+    description: "The path of the Golang code"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Golang
+      id: setup
+      uses: actions/setup-go@v2
+      with:
+        go-version: "${{ inputs.go-version }}"
+    - name: Golang test code
+      id: test
+      env:
+        WORKING_DIRECTORY: "${{ inputs.working_directory }}"
+      run: |
+        "${{ github.action_path }}/golang_test.sh"
+      shell: bash
